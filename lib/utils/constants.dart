@@ -1,3 +1,5 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import '../models/coordinate_model.dart';
 
 final List<CoordinateModel> coordinateList = [
@@ -24,7 +26,8 @@ CoordinateModel("Çankaya", "Birlik-2 Parkı", [39.8814878951051, 32.88108340008
 CoordinateModel("Çankaya", "Mehmet Hikmet Ayberk İO Bahçesi", [39.832922156491, 32.9469025771122]),
 CoordinateModel("Çankaya", "Meydan Parkı", [39.8741694193976, 32.6834596576886]),
 CoordinateModel("Çankaya", "Bilkent Real Otoparkı", [39.8840326973386, 32.7585313955136]),
-CoordinateModel("Çankaya", "Ersin Çıldır Parkı", [39.891145353947, 32.8183679170128]),CoordinateModel("Çankaya", "Fikret Kızılok Parkı", [39.8490615640511, 32.838054714405]),
+CoordinateModel("Çankaya", "Ersin Çıldır Parkı", [39.891145353947, 32.8183679170128]),
+CoordinateModel("Çankaya", "Fikret Kızılok Parkı", [39.8490615640511, 32.838054714405]),
 CoordinateModel("Çankaya", "Misak-ı Milli İO Bahçesi", [39.8581691635632, 32.7415608661872]),
 CoordinateModel("Çankaya", "Güzelsanatlar ve Spor Lisesi Bahçesi", [39.8733105555923, 32.7203431057108]),
 CoordinateModel("Çankaya", "Süvari Parkı", [39.8844786137455, 32.8675435636711]),
@@ -74,3 +77,17 @@ CoordinateModel("Çankaya", "Barış Parkı", [39.8881761878092, 32.819414148193
 CoordinateModel("Çankaya", "Botanik Parkı", [39.887941857575, 32.8565299870627]),
 CoordinateModel("Çankaya", "Sultan Fatih Parkı", [39.8831119008777, 32.6840806066307]),
 CoordinateModel("Çankaya", "Balgat Aliye Yahşi Meslek Lisesi Bah.", [39.9085965929133, 32.8159337537918]),];
+
+final markers= [Marker(
+markerId: MarkerId("Yenilik İO Bahçesi"),
+position: LatLng(39.864217229349, 32.8303028059098),
+infoWindow: InfoWindow(title: "Yenilik İO Bahçesi"),
+),Marker(
+  markerId: MarkerId("Balgat Aliye Yahşi Meslek Lisesi Bah."),
+  position: LatLng(39.9085965929133, 32.8159337537918),
+  infoWindow: InfoWindow(title: "Balgat Aliye Yahşi Meslek Lisesi Bah."),
+),Marker(
+  markerId: MarkerId("Kuğulu Park"),
+  position: LatLng(39.9019095674532, 32.8601492660582),
+  infoWindow: InfoWindow(title: "Kuğulu Park"),
+),];
