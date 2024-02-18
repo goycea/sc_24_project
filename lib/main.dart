@@ -33,8 +33,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    FireStoreService fireStoreService = FireStoreService();
-    fireStoreService.addBuilding("name", "location", "description");
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: MotionTabBarPage(),
