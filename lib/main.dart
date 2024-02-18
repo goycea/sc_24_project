@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
-import 'package:sc_24_project/views/map_view.dart';
 import 'package:sc_24_project/views/motion_tab_bar.dart';
 
 
