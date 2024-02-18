@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDw46-RD-EIYn_XyDYLwtgKCsvKNvoRxpE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>436142797279</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.sc24Project</string>
+	<key>PROJECT_ID</key>
+	<string>guvenliyuvam-34544</string>
+	<key>STORAGE_BUCKET</key>
+	<string>guvenliyuvam-34544.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:436142797279:ios:5385725e94878c2d3f546a</string>
+	<key>DATABASE_URL</key>
+	<string>https://guvenliyuvam-34544-default-rtdb.europe-west1.firebasedatabase.app</string>
+</dict>
+</plist>
