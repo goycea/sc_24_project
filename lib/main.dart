@@ -1,6 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:sc_24_project/services/firestore.dart';
+import 'package:sc_24_project/views/camera_view.dart';
+
 import 'package:sc_24_project/views/motion_tab_bar.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -8,11 +10,13 @@ import 'firebase_options.dart';
 
 late Box userBox;
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   userBox = await Hive.openBox("user");
   await Firebase.initializeApp(
   options: DefaultFirebaseOptions.currentPlatform,
 );
+
   runApp(const MyApp());
 }
 
@@ -36,7 +40,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MotionTabBarPage(),
+      home: CamerPage(),
       );
   }
 }
