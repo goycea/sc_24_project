@@ -1,10 +1,11 @@
 import 'dart:async';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:ui' as ui;
 
-import '../utils/constants.dart';
+import '../utils/list_constants.dart';
 
 class MapView extends StatefulWidget {
   const MapView({super.key});
@@ -15,7 +16,7 @@ class MapView extends StatefulWidget {
 
 class _MapViewState extends State<MapView> {
   final Completer<GoogleMapController> _controller =
-  Completer<GoogleMapController>();
+      Completer<GoogleMapController>();
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(39.924635, 32.862448),
@@ -25,16 +26,19 @@ class _MapViewState extends State<MapView> {
   static const CameraPosition _kLake = CameraPosition(
       target: LatLng(39.9019095674532, 32.8601492660582),
       zoom: 15.151926040649414);
-  
-  Set<Marker> markers = {}; 
-  
-  @override
-  void initState() { 
-    super.initState();
-    markers = coordinateList.map((e) {return Marker(markerId:MarkerId("${e.name}"),infoWindow: InfoWindow(title: "${e.name}") ,
-        position: LatLng(e.coordinates.first,e.coordinates.last));}).toSet();
-  }
 
+  Set<Marker> markers = {};
+
+  @override
+  void initState() {
+    super.initState();
+    markers = coordinateList.map((e) {
+      return Marker(
+          markerId: MarkerId("${e.name}"),
+          infoWindow: InfoWindow(title: "${e.name}"),
+          position: LatLng(e.coordinates.first, e.coordinates.last));
+    }).toSet();
+  }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
@@ -45,8 +49,6 @@ class _MapViewState extends State<MapView> {
         .buffer
         .asUint8List();
   }
-
-
 
   /*void _getCustomMarker() async {
     final Uint8List romeoMarkerIcon =
@@ -64,28 +66,20 @@ class _MapViewState extends State<MapView> {
     setState(() {});
   }*/
 
-
-
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
-
       appBar: AppBar(title: const Text("Map Sample")),
       body: GoogleMap(
         myLocationButtonEnabled: true,
         indoorViewEnabled: true,
-
         mapType: MapType.normal,
         markers: markers.toSet(),
         initialCameraPosition: _kGooglePlex,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
-
       ),
-
     );
   }
 
