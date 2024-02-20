@@ -14,6 +14,7 @@ const textSizeLargeNormal = 22.0;
 const textSizeLarge = 24.0;
 const textSizeXLarge = 28.0;
 const textSizeXXLarge = 30.0;
+const textSizeXXXLarge = 40.0;
 const textSizeBig = 50.0;
 const textSizeTooBig = 70.0;
 
