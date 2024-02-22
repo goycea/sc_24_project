@@ -2,9 +2,17 @@ import 'dart:io';
 
 import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_geocoder/geocoder.dart';
+import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:kartal/kartal.dart';
+import 'package:provider/provider.dart';
+import 'package:sc_24_project/managers/auth_manager.dart';
+import 'package:sc_24_project/utils/string_constant.dart';
 
+import '../models/textfield_rule_model.dart';
 import '../utils/font_constants.dart';
 
 class ConstructionView extends StatefulWidget {
@@ -15,22 +23,28 @@ class ConstructionView extends StatefulWidget {
 }
 
 class _ConstructionViewState extends State<ConstructionView> {
+  AuthenticationManager readAuthManager() =>
+      context.read<AuthenticationManager>();
+  AuthenticationManager watchAuthManager() =>
+      context.watch<AuthenticationManager>();
+
   var snackBar = const SnackBar(
-    content: Text('Your report has been sent'),
+    content: Text('Please agree with the terms of use!'),
   );
 
   int _activeStepIndex = 0;
   bool checked = false;
+  DateTime formatedDate = DateTime.now();
 
   TextEditingController buildingName = TextEditingController();
   TextEditingController numberOfFloor = TextEditingController();
-  TextEditingController yearOfBuilding = TextEditingController();
   TextEditingController country = TextEditingController();
   TextEditingController state = TextEditingController();
   TextEditingController city = TextEditingController();
   TextEditingController address = TextEditingController();
 
-  String fullAddress = "";
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
 
   File? selectedImage;
 
@@ -40,8 +54,6 @@ class _ConstructionViewState extends State<ConstructionView> {
     setState(() {
       selectedImage = File(image!.path);
     });
-
-    //return File(image!.path);
   }
 
   Future _pickImageFromCamera() async {
@@ -50,8 +62,6 @@ class _ConstructionViewState extends State<ConstructionView> {
     setState(() {
       selectedImage = File(image!.path);
     });
-
-    //return File(image!.path);
   }
 
   List<Step> stepList() => [
@@ -62,42 +72,66 @@ class _ConstructionViewState extends State<ConstructionView> {
           title: const SizedBox(),
           content: SizedBox(
             height: context.sized.dynamicHeight(0.5),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const Text(
-                  "Building Information",
-                  style: TextStyle(
-                      fontSize: textSizeXXXLarge, fontWeight: FontWeight.bold),
-                ),
-                const Text("Fill in the data for building profile. "
-                    "It will take a couple of minutes. "
-                    "You only need a basic information and plan of the building"),
-                myTextField(buildingName, 'Building Name', 'Enter your name',
-                    "", TextInputType.text),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    SizedBox(
-                      width: context.sized.dynamicWidth(0.4),
-                      child: myTextField(
-                          numberOfFloor,
-                          'Number of Floor',
-                          'Enter the number of floor',
-                          "",
-                          TextInputType.number),
-                    ),
-                    SizedBox(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Text(
+                    "Building Information",
+                    style: TextStyle(
+                        fontSize: textSizeXXXLarge,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const Text("Fill in the data for building profile. "
+                      "It will take a couple of minutes. "
+                      "You only need a basic information and plan of the building"),
+                  myTextField(buildingName, 'Building Name', 'Enter a name', "",
+                      TextInputType.text, []),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
                         width: context.sized.dynamicWidth(0.4),
                         child: myTextField(
-                            yearOfBuilding,
-                            'Year of Building',
-                            'Enter the year of building ',
-                            "(YYYY) like 1923",
-                            TextInputType.number)),
-                  ],
-                ),
-              ],
+                            numberOfFloor,
+                            'Number of Floor',
+                            'Enter the number of floor',
+                            "",
+                            TextInputType.number, []),
+                      ),
+                      SizedBox(
+                          width: context.sized.dynamicWidth(0.4),
+                          child: Column(
+                            children: [
+                              const Text("Building of year ",
+                                  style: TextStyle(fontSize: textSizeMedium)),
+                              TextButton(
+                                child: Text(
+                                    "${DateFormat("yyyy").format(formatedDate)} ",
+                                    style: const TextStyle(
+                                        fontSize: textSizeMedium)),
+                                onPressed: () async {
+                                  await DatePicker.showSimpleDatePicker(
+                                    context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(1000),
+                                    lastDate: DateTime.now(),
+                                    dateFormat: "yyyy",
+                                    locale: DateTimePickerLocale.tr,
+                                    looping: false,
+                                  ).then((value) {
+                                    formatedDate = value!;
+                                    setState(() {});
+                                  });
+                                },
+                              ),
+                            ],
+                          )),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -108,43 +142,46 @@ class _ConstructionViewState extends State<ConstructionView> {
             title: const SizedBox(),
             content: SizedBox(
               height: context.sized.dynamicHeight(0.5),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Align(
-                    alignment: Alignment.center,
-                    child: Text("Building Address",
-                        style: TextStyle(
-                            fontSize: textSizeXXLarge,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                  Text(
-                      "It is very important that you enter your building address"
-                      " correctly and completely so that we can get your floor quality."),
-                  const Text("Choose Country, State and City",
-                      style: TextStyle(
-                          fontSize: textSizeLargeMedium,
-                          fontWeight: FontWeight.bold)),
-                  CountryStateCityPicker(
-                    country: country,
-                    state: state,
-                    city: city,
-                    dialogColor: Colors.white,
-                    textFieldDecoration: const InputDecoration(
-                      suffixIcon: Icon(Icons.arrow_drop_down),
-                      focusColor: Colors.black,
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black)),
+              child: Form(
+                key: _formKey1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Align(
+                      alignment: Alignment.center,
+                      child: Text("Building Address",
+                          style: TextStyle(
+                              fontSize: textSizeXXLarge,
+                              fontWeight: FontWeight.bold)),
                     ),
-                  ),
-                  myTextField(
-                      address,
-                      "Address",
-                      "Enter your address ",
-                      "Street, neighborhood, number, building name and etc.",
-                      TextInputType.text),
-                ],
+                    const Text(
+                        "It is very important that you enter your building address"
+                        " correctly and completely so that we can get your floor quality."),
+                    const Text("Choose Country, State and City",
+                        style: TextStyle(
+                            fontSize: textSizeLargeMedium,
+                            fontWeight: FontWeight.bold)),
+                    CountryStateCityPicker(
+                      country: country,
+                      state: state,
+                      city: city,
+                      dialogColor: Colors.white,
+                      textFieldDecoration: const InputDecoration(
+                        suffixIcon: Icon(Icons.arrow_drop_down),
+                        focusColor: Colors.black,
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                      ),
+                    ),
+                    myTextField(
+                        address,
+                        "Address",
+                        "Street, neighborhood, number, building name, and etc",
+                        "",
+                        TextInputType.text, []),
+                  ],
+                ),
               ),
             )),
         Step(
@@ -161,7 +198,7 @@ class _ConstructionViewState extends State<ConstructionView> {
                     style: TextStyle(
                         fontSize: textSizeLarge, fontWeight: FontWeight.bold),
                   ),
-                  Text("We need a building diagram for "
+                  const Text("We need a building diagram for "
                       "the estimated damage your building will suffer in a possible earthquake."),
                   Container(
                     height: 200,
@@ -183,7 +220,7 @@ class _ConstructionViewState extends State<ConstructionView> {
                             _pickImageFromGallery()
                                 .then((value) => print('Image Picked'));
                           },
-                          child: Text('Gallery')),
+                          child: const Text('Gallery')),
                       const SizedBox(
                         width: 20,
                       ),
@@ -191,7 +228,7 @@ class _ConstructionViewState extends State<ConstructionView> {
                           onPressed: () {
                             _pickImageFromCamera();
                           },
-                          child: Text('Camera')),
+                          child: const Text('Camera')),
                     ],
                   ),
                 ],
@@ -209,12 +246,13 @@ class _ConstructionViewState extends State<ConstructionView> {
                 children: [
                   finalShow("Building Name: ", buildingName.text),
                   finalShow("Number of Floor: ", numberOfFloor.text),
-                  finalShow("Year of Building: ", yearOfBuilding.text),
+                  finalShow("Year of Building: ",
+                      "${DateFormat("yyyy").format(formatedDate)} "),
                   finalShow("Country: ", country.text),
                   finalShow("State: ", state.text),
                   finalShow("City: ", city.text),
                   finalShow("Address: ", address.text),
-                  Text(
+                  const Text(
                     "Your building schema photo: ",
                     style: TextStyle(
                         fontSize: textSizeLargeMedium,
@@ -235,7 +273,7 @@ class _ConstructionViewState extends State<ConstructionView> {
                             ),
                           ),
                         )
-                      : Text("No image selected yet")
+                      : const Text("No image selected yet")
                 ],
               ),
             ))
@@ -254,12 +292,49 @@ class _ConstructionViewState extends State<ConstructionView> {
         ]));
   }
 
+  bool isDetailComplete() {
+    if (_activeStepIndex == 0) {
+      //check sender fields
+      if (_formKey.currentState!.validate()) {
+        return true;
+      } else {
+        return false;
+      }
+    } else if (_activeStepIndex == 1) {
+      //check receiver fields
+      if (_formKey1.currentState!.validate() &&
+          country.text.isNotEmpty &&
+          state.text.isNotEmpty &&
+          city.text.isNotEmpty) {
+        return true;
+      } else {
+        const SnackBar(
+          content: Text('Please fill in the address fields correctly!'),
+        );
+        return false;
+      }
+    } else if (_activeStepIndex == 2) {
+      //check receiver fields
+      if (selectedImage != null) {
+        return true;
+      } else {
+        const SnackBar(
+          content: Text('Please select a building schema photo!'),
+        );
+        return false;
+      }
+    } else {
+      return true;
+    }
+  }
+
   Column myTextField(
     TextEditingController controller,
     String labelText,
     String hintText,
     String helperText,
     TextInputType textInputType,
+    List<RuleModel> rules,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,6 +351,26 @@ class _ConstructionViewState extends State<ConstructionView> {
             border: const OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.black)),
           ),
+          inputFormatters: [
+            textInputType == TextInputType.text
+                ? FilteringTextInputFormatter(
+                    RegExp("[a-zA-ZöÖğĞşŞçÇıİüÜ,0-9/. ]"),
+                    allow: true,
+                  )
+                : FilteringTextInputFormatter(RegExp("[0-9]"), allow: true),
+          ],
+          validator: (String? value) {
+            if (value == null || value.isEmpty) {
+              return emptyFieldWarn;
+            } else if (rules.isNotEmpty) {
+              for (var rule in rules) {
+                if (!rule.value) {
+                  return rule.warn;
+                }
+              }
+            }
+            return null;
+          },
         ),
       ],
     );
@@ -362,14 +457,31 @@ class _ConstructionViewState extends State<ConstructionView> {
             ),
           );
         },
-        onStepContinue: () {
-          if (_activeStepIndex < (stepList().length - 1)) {
-            setState(() {
-              _activeStepIndex += 1;
-            });
-          } else {
-            if (_activeStepIndex == stepList().length - 1) {
-              Navigator.pop(context);
+        onStepContinue: () async {
+          if (isDetailComplete()) {
+            if (_activeStepIndex < (stepList().length - 1)) {
+              setState(() {
+                _activeStepIndex += 1;
+              });
+            } else {
+              if (_activeStepIndex == stepList().length - 1 && checked) {
+                final query =
+                    " ${address.text}, ${city.text}/${state.text}, ${country.text}";
+                var addresses =
+                    await Geocoder.local.findAddressesFromQuery(query);
+                var first = addresses.first;
+                print(
+                    "${first.featureName} :  ${first.coordinates.latitude}, ${first.coordinates.longitude}");
+                await readAuthManager().calculate(
+                    x: first.coordinates.longitude.toString(),
+                    y: first.coordinates.latitude.toString(),
+                    imagePath: selectedImage!.path,
+                    floor: int.parse(numberOfFloor.text),
+                    year: formatedDate.year);
+                // Navigator.pop(context);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
             }
           }
         },

@@ -11,7 +11,6 @@ class BuildingModel {
 
   BuildingModel({
     required this.name,
-    required this.buildingType,
     required this.yearOfBuilding,
     required this.address,
     required this.floorNumber,
@@ -22,7 +21,6 @@ class BuildingModel {
   Map<String, dynamic> toJson() {
     return {
       'name': name,
-      'buildingType': buildingType,
       'yearOfBuilding': yearOfBuilding,
       'address': address,
       'floorNumber': floorNumber,

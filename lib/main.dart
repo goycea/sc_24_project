@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:sc_24_project/views/motion_tab_bar.dart';
 
 import 'firebase_options.dart';
+import 'managers/auth_manager.dart';
 
 late Box userBox;
 Future<void> main() async {
@@ -14,7 +16,13 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider<AuthenticationManager>(
+        create: (context) => AuthenticationManager(context: context),
+      ),
+    ], child: const MyApp()),
+  );
 }
 
 class MyApp extends StatefulWidget {
