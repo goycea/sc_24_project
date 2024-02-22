@@ -1,8 +1,9 @@
 import 'package:http/http.dart' as http;
 
-class EnginCalculator {
+
+  
   void main() async {
-    calculate('30.828282', '35.838383', 'PhotoPath');
+    calculate('30.828282', '35.838383', '/Users/hajorda/Desktop/img.jpeg');
   }
 
   Future calculate(String x, String y, String imagePath) async {
@@ -20,4 +21,4 @@ class EnginCalculator {
       print(response.reasonPhrase);
     }
   }
-}
+
