@@ -14,7 +14,6 @@ class _GuidesPageState extends State<GuidesPage> {
   List<GuideModel> guides = [];
   @override
   void initState() {
-    // TODO: implement initState
     engin();
     super.initState();
   }
@@ -37,11 +36,14 @@ class _GuidesPageState extends State<GuidesPage> {
             return ListTile(
                 title: Text(guides[index].title),
                 subtitle: Text(guides[index].author),
+                trailing: guides[index].isSuggested != false
+                    ? Text('Suggested', style: TextStyle(color: Colors.green))
+                    : null,
                 onTap: () {
                   Navigator.push(
                     context,
-                    new MaterialPageRoute(
-                      builder: (context) => new GuideView(
+                    MaterialPageRoute(
+                      builder: (context) => GuideView(
                           title: guides[index].author,
                           author: guides[index].author,
                           publishDate: guides[index].publishDate,
