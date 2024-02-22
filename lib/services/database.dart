@@ -18,6 +18,7 @@ Future deleteGuide({required int index}) async {
 }
 
 Future<List<GuideModel>> getGuides() async {
+  print(box.length);
   final List<GuideModel> guides = [];
   for (var i = 0; i < box.length; i++) {
     final guide = box.getAt(i);

@@ -11,16 +11,24 @@ class GuidesPage extends StatefulWidget {
 }
 
 class _GuidesPageState extends State<GuidesPage> {
-  List<GuideModel> guides = [];
+  List<GuideModel> guides = [
+    GuideModel(title: 'zort', author: 'author', publishDate: 'date', content: 'content', tags: []),
+  ];
   @override
   void initState() {
-    engin();
+   
+      engin();
+
     super.initState();
   }
 
   void engin() async {
     Database database = Database();
     guides = await database.getGuides();
+    setState(() {
+      guides = guides;
+    });
+    print('object');
   }
 
   @override
