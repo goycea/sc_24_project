@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
 import 'package:motion_tab_bar_v2/motion-tab-controller.dart';
-
-import 'guides_view.dart';
+import 'package:sc_24_project/views/guidesPage.dart';
 import 'home_view.dart';
 import 'map_view.dart';
 import 'reports_view.dart';
-
 
 class MotionTabBarPage extends StatefulWidget {
   MotionTabBarPage({super.key});
@@ -25,7 +23,7 @@ class _MotionTabBarPageState extends State<MotionTabBarPage>
     const HomeView(),
     const MapView(),
     const ReportsView(),
-    const GuideView(),
+    const GuidesPage(),
   ]; // Change the type of the screens variable from List<Widget> to List<Container>
 
   @override
@@ -57,44 +55,42 @@ class _MotionTabBarPageState extends State<MotionTabBarPage>
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: _requestPop,
-      child: Scaffold(
-        body: TabBarView(
+        onWillPop: _requestPop,
+        child: Scaffold(
+          body: TabBarView(
             controller: _controller,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            for (var i = 0; i < screens.length; i++)
-              Container(
-                child: screens[i],
-              ),
-          ],),
-
-        bottomNavigationBar: MotionTabBar(
-          controller: _controller,
-          labels: [
-            "Home",
-            "Map View",
-            "Reports",
-            "Guides",
-          ],
-          initialSelectedTab: 'Home',
-          tabIconColor: Colors.black,
-          tabSelectedColor: Colors.black54,
-          icons: const [
-            Icons.home_outlined,
-            CupertinoIcons.map_fill,
-            Icons.event_note_outlined,
-            Icons.book_sharp,
-          ],
-          textStyle: const TextStyle(color: Colors.black),
-          onTabItemSelected: (int value) {
-            setState(() {
-              _controller!.index = value;
-            });
-          },
-
-        ),
-      ));
-
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              for (var i = 0; i < screens.length; i++)
+                Container(
+                  child: screens[i],
+                ),
+            ],
+          ),
+          bottomNavigationBar: MotionTabBar(
+            controller: _controller,
+            labels: [
+              "Home",
+              "Map View",
+              "Reports",
+              "Guides",
+            ],
+            initialSelectedTab: 'Home',
+            tabIconColor: Colors.black,
+            tabSelectedColor: Colors.black54,
+            icons: const [
+              Icons.home_outlined,
+              CupertinoIcons.map_fill,
+              Icons.event_note_outlined,
+              Icons.book_sharp,
+            ],
+            textStyle: const TextStyle(color: Colors.black),
+            onTabItemSelected: (int value) {
+              setState(() {
+                _controller!.index = value;
+              });
+            },
+          ),
+        ));
   }
 }
