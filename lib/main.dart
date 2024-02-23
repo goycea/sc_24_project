@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sc_24_project/services/GuidesHiveService.dart';
-import 'package:sc_24_project/views/motion_tab_bar.dart';
+import 'package:sc_24_project/auth/authPage.dart';
 
 import 'firebase_options.dart';
 import 'managers/auth_manager.dart';
@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MotionTabBarPage(),
+      home: AuthPage(),
     );
   }
 }
