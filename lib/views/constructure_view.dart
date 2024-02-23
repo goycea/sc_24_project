@@ -11,6 +11,7 @@ import 'package:kartal/kartal.dart';
 import 'package:provider/provider.dart';
 import 'package:sc_24_project/managers/auth_manager.dart';
 import 'package:sc_24_project/utils/string_constant.dart';
+import 'package:sc_24_project/views/result_view.dart';
 
 import '../models/textfield_rule_model.dart';
 import '../utils/font_constants.dart';
@@ -354,7 +355,7 @@ class _ConstructionViewState extends State<ConstructionView> {
           inputFormatters: [
             textInputType == TextInputType.text
                 ? FilteringTextInputFormatter(
-                    RegExp("[a-zA-ZöÖğĞşŞçÇıİüÜ,0-9/. ]"),
+                    RegExp("[a-zA-ZöÖğĞşŞçÇıİüÜ,0-9/:(). ]"),
                     allow: true,
                   )
                 : FilteringTextInputFormatter(RegExp("[0-9]"), allow: true),
@@ -408,7 +409,9 @@ class _ConstructionViewState extends State<ConstructionView> {
                               borderRadius: BorderRadius.circular(8),
                               side: const BorderSide(color: Colors.black)),
                         ),
-                        onPressed: details.onStepCancel,
+                        onPressed: watchAuthManager().isLoading
+                            ? null
+                            : details.onStepCancel,
                         child: const Text('← Back',
                             style: TextStyle(
                                 color: Colors.black, fontSize: textSizeNormal)),
@@ -423,11 +426,15 @@ class _ConstructionViewState extends State<ConstructionView> {
                             borderRadius: BorderRadius.circular(8),
                             side: const BorderSide(color: Colors.black)),
                       ),
-                      onPressed: details.onStepContinue,
+                      onPressed: watchAuthManager().isLoading
+                          ? null
+                          : details.onStepContinue,
                       child: Text(
                           _activeStepIndex != stepList().length - 1
                               ? 'Next →'
-                              : "Finish",
+                              : watchAuthManager().isLoading
+                                  ? "Please wait..."
+                                  : "Finish",
                           style: const TextStyle(
                               color: Colors.black, fontSize: textSizeNormal)),
                     ),
@@ -479,6 +486,8 @@ class _ConstructionViewState extends State<ConstructionView> {
                     floor: int.parse(numberOfFloor.text),
                     year: formatedDate.year);
                 // Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ResultView()));
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }

@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sc_24_project/models/result_model.dart';
 
 class AuthenticationManager with ChangeNotifier {
   BuildContext context;
@@ -15,10 +16,7 @@ class AuthenticationManager with ChangeNotifier {
     notifyListeners();
   }
 
-  final userCollection = FirebaseFirestore.instance.collection("users");
-  final foodGroupCollection =
-      FirebaseFirestore.instance.collection("foodGroup");
-  final foodsCollection = FirebaseFirestore.instance.collection("foods");
+  ResultModel resultModel = ResultModel();
 
   Future calculate(
       {required String x,
@@ -26,6 +24,7 @@ class AuthenticationManager with ChangeNotifier {
       required String imagePath,
       required int year,
       required int floor}) async {
+    _changeLoading();
     var request = http.MultipartRequest(
         'POST', Uri.parse('https://cicikus.pythonanywhere.com/api/data-image'));
     request.fields.addAll({
@@ -37,12 +36,25 @@ class AuthenticationManager with ChangeNotifier {
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
+      resultModel = ResultModel.fromJson(
+          jsonDecode(await response.stream.bytesToString()));
+      print(resultModel.groundType.toString() +
+          " " +
+          resultModel.totalValue.toString() +
+          " " +
+          resultModel.pGA.toString() +
+          " " +
+          resultModel.index.toString() +
+          " ");
     } else {
       print(response.reasonPhrase);
     }
+    _changeLoading();
   }
-  //final firebaseAuth = FirebaseAuth.instance;
+
+// final userCollection = FirebaseFirestore.instance.collection("users");
+
+//final firebaseAuth = FirebaseAuth.instance;
 
 /*  Future<void> signUp(
       {required String name,
