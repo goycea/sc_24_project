@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sc_24_project/models/building_model.dart';
 import 'package:sc_24_project/models/result_model.dart';
 
 class AuthenticationManager with ChangeNotifier {
   BuildContext context;
+
   AuthenticationManager({required this.context});
 
   bool isLoading = false;
@@ -52,6 +55,39 @@ class AuthenticationManager with ChangeNotifier {
     _changeLoading();
   }
 
+  final CollectionReference fs =
+      FirebaseFirestore.instance.collection('buildings');
+
+  Future<void> addBuilding(
+      BuildingModel buildingModel, ResultModel resultModel) async {
+    BuildingModel _buildingModel = BuildingModel(
+      name: buildingModel.name,
+      approved: false,
+      yearOfBuilding: buildingModel.yearOfBuilding,
+      address: buildingModel.address,
+      floorNumber: buildingModel.floorNumber,
+      position: buildingModel.position,
+      buildingProjectImage: "",
+      resultModel: resultModel,
+    );
+    await fs
+        .doc(buildingModel.position.toString())
+        .set(_buildingModel.toJson());
+  }
+
+  late List<BuildingModel> buildings;
+
+  Future<void> fetchBuildings() async {
+    List<BuildingModel> allData = [];
+    final foodsData = await fs.get().then((value) async {
+      for (var doc in value.docs) {
+        allData.add(BuildingModel.fromJson(doc.data() as Map<String, dynamic>));
+      }
+      return allData;
+    });
+
+    buildings = foodsData;
+  }
 // final userCollection = FirebaseFirestore.instance.collection("users");
 
 //final firebaseAuth = FirebaseAuth.instance;

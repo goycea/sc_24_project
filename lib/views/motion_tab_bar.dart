@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
 import 'package:motion_tab_bar_v2/motion-tab-controller.dart';
+import 'package:provider/provider.dart';
 import 'package:sc_24_project/views/guidesPage.dart';
+
+import '../managers/auth_manager.dart';
 import 'home_view.dart';
 import 'map_view.dart';
 import 'reports_view.dart';
@@ -19,6 +22,11 @@ class _MotionTabBarPageState extends State<MotionTabBarPage>
     with SingleTickerProviderStateMixin {
   MotionTabBarController? _controller;
 
+  AuthenticationManager readAuthManager() =>
+      context.read<AuthenticationManager>();
+  AuthenticationManager watchAuthManager() =>
+      context.watch<AuthenticationManager>();
+
   final screens = <Widget>[
     const HomeView(),
     const MapView(),
@@ -30,6 +38,8 @@ class _MotionTabBarPageState extends State<MotionTabBarPage>
   void initState() {
     // TODO: implement initState
     super.initState();
+    readAuthManager().fetchBuildings();
+
     _controller = MotionTabBarController(
       initialIndex: 0,
       length: screens.length,

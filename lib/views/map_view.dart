@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 
+import '../managers/auth_manager.dart';
 import '../utils/list_constants.dart';
 
 class MapView extends StatefulWidget {
@@ -18,6 +20,11 @@ class MapView extends StatefulWidget {
 class _MapViewState extends State<MapView> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
+
+  AuthenticationManager readAuthManager() =>
+      context.read<AuthenticationManager>();
+  AuthenticationManager watchAuthManager() =>
+      context.watch<AuthenticationManager>();
 
   BitmapDescriptor assemblyArea = BitmapDescriptor.defaultMarker;
   BitmapDescriptor building = BitmapDescriptor.defaultMarker;
@@ -71,10 +78,16 @@ class _MapViewState extends State<MapView> {
   }
 
   Future<void> _getBuildingMarker() async {
-    final Uint8List assemblyIcon =
+    final Uint8List buildingIcon =
         await getBytesFromAsset('assets/images/building.png', 150);
-    building = BitmapDescriptor.fromBytes(assemblyIcon);
-    buildingMarkers = {};
+    building = BitmapDescriptor.fromBytes(buildingIcon);
+    buildingMarkers = readAuthManager().buildings.map((e) {
+      return Marker(
+          icon: building,
+          markerId: MarkerId("${e.yearOfBuilding}"),
+          infoWindow: InfoWindow(title: "${e.yearOfBuilding}"),
+          position: LatLng(e.position!.first, e.position!.last));
+    }).toSet();
   }
 
   Future<void> _getAllMarkers() async {

@@ -13,6 +13,7 @@ import 'package:sc_24_project/managers/auth_manager.dart';
 import 'package:sc_24_project/utils/string_constant.dart';
 import 'package:sc_24_project/views/result_view.dart';
 
+import '../models/building_model.dart';
 import '../models/textfield_rule_model.dart';
 import '../utils/font_constants.dart';
 
@@ -485,6 +486,19 @@ class _ConstructionViewState extends State<ConstructionView> {
                     imagePath: selectedImage!.path,
                     floor: int.parse(numberOfFloor.text),
                     year: formatedDate.year);
+                await readAuthManager().addBuilding(
+                    BuildingModel(
+                        approved: false,
+                        yearOfBuilding: formatedDate.year,
+                        address: query,
+                        floorNumber: int.parse(numberOfFloor.text),
+                        position: [
+                          first.coordinates.latitude!,
+                          first.coordinates.longitude!
+                        ],
+                        buildingProjectImage: ""),
+                    readAuthManager().resultModel);
+
                 // Navigator.pop(context);
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => ResultView()));
