@@ -500,8 +500,21 @@ class _ConstructionViewState extends State<ConstructionView> {
                     readAuthManager().resultModel);
 
                 // Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ResultView()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ResultView(
+                              buildingModel: BuildingModel(
+                                  approved: false,
+                                  yearOfBuilding: formatedDate.year,
+                                  address: query,
+                                  floorNumber: int.parse(numberOfFloor.text),
+                                  position: [
+                                    first.coordinates.latitude!,
+                                    first.coordinates.longitude!
+                                  ],
+                                  buildingProjectImage: ""),
+                            )));
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }

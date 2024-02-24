@@ -58,9 +58,10 @@ class AuthenticationManager with ChangeNotifier {
   final CollectionReference fs =
       FirebaseFirestore.instance.collection('buildings');
 
+  BuildingModel? buildingModel;
   Future<void> addBuilding(
       BuildingModel buildingModel, ResultModel resultModel) async {
-    BuildingModel _buildingModel = BuildingModel(
+    buildingModel = BuildingModel(
       name: buildingModel.name,
       approved: false,
       yearOfBuilding: buildingModel.yearOfBuilding,
@@ -70,9 +71,8 @@ class AuthenticationManager with ChangeNotifier {
       buildingProjectImage: "",
       resultModel: resultModel,
     );
-    await fs
-        .doc(buildingModel.position.toString())
-        .set(_buildingModel.toJson());
+
+    await fs.doc(buildingModel.position.toString()).set(buildingModel.toJson());
   }
 
   late List<BuildingModel> buildings;
