@@ -504,17 +504,17 @@ class _ConstructionViewState extends State<ConstructionView> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => ResultView(
-                              buildingModel: BuildingModel(
-                                  approved: false,
-                                  yearOfBuilding: formatedDate.year,
-                                  address: query,
-                                  floorNumber: int.parse(numberOfFloor.text),
-                                  position: [
-                                    first.coordinates.latitude!,
-                                    first.coordinates.longitude!
-                                  ],
-                                  buildingProjectImage: ""),
-                            )));
+                            buildingModel: BuildingModel(
+                                approved: false,
+                                yearOfBuilding: formatedDate.year,
+                                address: query,
+                                floorNumber: int.parse(numberOfFloor.text),
+                                position: [
+                                  first.coordinates.latitude!,
+                                  first.coordinates.longitude!
+                                ],
+                                buildingProjectImage: ""),
+                            resultModel: readAuthManager().resultModel)));
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }

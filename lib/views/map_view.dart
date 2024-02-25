@@ -94,7 +94,7 @@ class _MapViewState extends State<MapView> {
     final Uint8List buildingIcon =
         await getBytesFromAsset('assets/images/building.png', 150);
     building = BitmapDescriptor.fromBytes(buildingIcon);
-    buildingMarkers = readAuthManager().buildings.map((e) {
+    buildingMarkers = readAuthManager().buildings!.map((e) {
       return Marker(
           icon: building,
           markerId: MarkerId("${e.yearOfBuilding}"),

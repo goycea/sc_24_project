@@ -5,9 +5,12 @@ import 'package:sc_24_project/managers/auth_manager.dart';
 import 'package:sc_24_project/models/building_model.dart';
 import 'package:sc_24_project/models/result_model.dart';
 
+// ignore: must_be_immutable
 class ResultView extends StatefulWidget {
-  ResultView({super.key, required this.buildingModel});
+  ResultView(
+      {super.key, required this.buildingModel, required this.resultModel});
   BuildingModel buildingModel;
+  ResultModel resultModel;
 
   @override
   State<ResultView> createState() => _ResultViewState();
@@ -19,12 +22,21 @@ class _ResultViewState extends State<ResultView> {
   AuthenticationManager watchAuthManager() =>
       context.watch<AuthenticationManager>();
 
-  ResultModel resultModel = ResultModel();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    resultModel = readAuthManager().resultModel;
+  }
+
+  double? getLastNumber(String text) {
+    RegExp regExp =
+        RegExp(r'(\d+\.\d+)'); // Regular expression to match double values
+    Match? match = regExp.firstMatch(text);
+    if (match != null) {
+      return double.tryParse(
+          match.group(0) ?? ''); // Parsing matched value to double
+    }
+    return 0; // Return null if no double value is found
   }
 
   @override
@@ -46,10 +58,10 @@ class _ResultViewState extends State<ResultView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                buildColumn("PGA", resultModel.pGA.toString()),
-                buildColumn("Total Value", resultModel.totalValue.toString()),
-                buildColumn("Ground Type", resultModel.groundType.toString()),
-                buildColumn("Index", resultModel.index.toString()),
+                buildColumn(
+                    "Total Value", widget.resultModel.totalValue.toString()),
+                buildColumn(
+                    "Index", "${getLastNumber(widget.resultModel.index!)}"),
               ],
             ),
             const Text(
