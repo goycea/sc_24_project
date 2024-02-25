@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
@@ -19,50 +17,51 @@ class GuidesPage extends StatefulWidget {
 class _GuidesPageState extends State<GuidesPage> {
   Database database = Database();
   List<GuideModel> guides = [
-    GuideModel(title: 'zort', author: 'author', publishDate: DateTime.now(), content: 'content', tags: []),
+    GuideModel(
+        title: 'zort',
+        author: 'author',
+        publishDate: DateTime.now(),
+        content: 'content',
+        tags: []),
   ];
   @override
   void initState() {
-      
-      checkGuides();
-   
-     
+    checkGuides();
 
     super.initState();
   }
 
   void engin() async {
-    
     guides = await database.getGuides();
 
     setState(() {
       guides = guides;
     });
-   if (kDebugMode) {
-     print("database checked!");
-   }
+    if (kDebugMode) {
+      print("database checked!");
+    }
   }
+
   bool _loading = false;
 
-    void checkGuides() async {
-      engin();
-      bool isThereInternet = true;
-      
-      //await checkInternet();
-      
-      if(isThereInternet){
+  void checkGuides() async {
+    engin();
+    bool isThereInternet = true;
 
-        setState(() {
-          _loading = true;
-        });
-        
-        GuideModel? last = await database.getLastGuide();
-        
-       if(last != null){
-         
-         DateTime? lastDate = last.publishDate;
+    //await checkInternet();
 
-        List<GuideModel?> gelen = await guideData(lastDate.day.toString(), lastDate.month.toString(), lastDate.year.toString());
+    if (isThereInternet) {
+      setState(() {
+        _loading = true;
+      });
+
+      GuideModel? last = await database.getLastGuide();
+
+      if (last != null) {
+        DateTime? lastDate = last.publishDate;
+
+        List<GuideModel?> gelen = await guideData(lastDate.day.toString(),
+            lastDate.month.toString(), lastDate.year.toString());
         print("last date: $lastDate");
         print(gelen.length);
         //print gelen guides
@@ -73,39 +72,27 @@ class _GuidesPageState extends State<GuidesPage> {
         for (var i = 0; i < gelen.length; i++) {
           await database.addGuide(model: gelen[i]!);
         }
-       }
-       else{
-         List<GuideModel?> gelen = await guideData("1", "1", "2000");
-         for (var i = 0; i < gelen.length; i++) {
+      } else {
+        List<GuideModel?> gelen = await guideData("1", "1", "2000");
+        for (var i = 0; i < gelen.length; i++) {
           await database.addGuide(model: gelen[i]!);
         }
-       }
-
-       
-
-        
-       
-      
-
-        engin();
-
-
-        setState(() {
-          _loading = false;
-        });
       }
 
-      else
-      {
-        setState(() {
-          _loading = false;
-        });
-      }
+      engin();
+
+      setState(() {
+        _loading = false;
+      });
+    } else {
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Guides'),
@@ -118,11 +105,18 @@ class _GuidesPageState extends State<GuidesPage> {
               enabled: _loading,
               ignoreContainers: true,
               child: ListTile(
-                  title: Text(guides[index].title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-                  subtitle: parse(guides[index].content).documentElement!.text.length > 100
-                      ? Text('${parse(guides[index].content).documentElement!.text.substring(0, 100)}...')
-                      : Text('${parse(guides[index].content).documentElement!.text}...'),
-
+                  title: Text(guides[index].title,
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w500)),
+                  subtitle: parse(guides[index].content)
+                              .documentElement!
+                              .text
+                              .length >
+                          100
+                      ? Text(
+                          '${parse(guides[index].content).documentElement!.text.substring(0, 100)}...')
+                      : Text(
+                          '${parse(guides[index].content).documentElement!.text}...'),
                   trailing: guides[index].isSuggested != false
                       ? Text('Suggested', style: TextStyle(color: Colors.green))
                       : null,

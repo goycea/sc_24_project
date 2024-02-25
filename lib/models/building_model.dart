@@ -15,15 +15,17 @@ class BuildingModel {
   String? email;
 
   BuildingModel(
-      {this.name,
+      {required this.name,
       required this.approved,
       required this.yearOfBuilding,
       required this.address,
       required this.floorNumber,
       required this.position,
       required this.buildingProjectImage,
-      this.resultModel,
-      this.email});
+      required this.resultModel,
+      required this.email,
+      required this.isFloorShop,
+      required this.isIncreasing});
 
   BuildingModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];

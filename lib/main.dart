@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:sc_24_project/auth/authPage.dart';
+import 'package:sc_24_project/auth/loginPage.dart';
 import 'package:sc_24_project/services/GuidesHiveService.dart';
 import 'package:sc_24_project/theme/theme_provider.dart';
 
@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       theme: Provider.of<ThemeProvider>(context).themeData,
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp> {
           ),
         );
       },
-      home: AuthPage(),
+      home: LoginPage(),
     );
   }
 }

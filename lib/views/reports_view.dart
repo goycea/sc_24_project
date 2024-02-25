@@ -45,8 +45,8 @@ class _ReportsViewState extends State<ReportsView> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ResultView(
-                          buildingModel: myBuildings[index],
-                          resultModel: myBuildings[index].resultModel!),
+                        buildingModel: myBuildings[index],
+                      ),
                     ),
                   );
                 },

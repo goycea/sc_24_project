@@ -108,7 +108,7 @@ class _ConstructionViewState extends State<ConstructionView> {
                           width: context.sized.dynamicWidth(0.4),
                           child: Column(
                             children: [
-                              const Text("Building of year ",
+                              const Text("Year of Building: ",
                                   style: TextStyle(fontSize: textSizeMedium)),
                               TextButton(
                                 child: Text(
@@ -134,35 +134,41 @@ class _ConstructionViewState extends State<ConstructionView> {
                           )),
                     ],
                   ),
-                  Row(
-                    children: [
-                      const Text(
-                        "Is there a shop on the ground floor?",
-                        style: TextStyle(fontSize: textSizeNormal),
-                      ),
-                      Checkbox(
-                        value: isFloorShop == 0 ? false : true,
-                        onChanged: (value) {
-                          isFloorShop = value! ? 1 : 0;
-                          setState(() {});
-                        },
-                      ),
-                    ],
+                  FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Row(
+                      children: [
+                        const Text(
+                          "Is there a shop on the ground floor?",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Checkbox(
+                          value: isFloorShop == 0 ? false : true,
+                          onChanged: (value) {
+                            isFloorShop = value! ? 1 : 0;
+                            setState(() {});
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: [
-                      const Text(
-                        "Is there a shop on the ground floor?",
-                        style: TextStyle(fontSize: textSizeNormal),
-                      ),
-                      Checkbox(
-                        value: isIncreasing == 0 ? false : true,
-                        onChanged: (value) {
-                          isFloorShop = value! ? 1 : 0;
-                          setState(() {});
-                        },
-                      ),
-                    ],
+                  FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Row(
+                      children: [
+                        const Text(
+                          "Does your building has expanding floor after the first floor?",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Checkbox(
+                          value: isIncreasing == 0 ? false : true,
+                          onChanged: (value) {
+                            isIncreasing = value! ? 1 : 0;
+                            setState(() {});
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -273,7 +279,7 @@ class _ConstructionViewState extends State<ConstructionView> {
             isActive: _activeStepIndex >= 3,
             title: const SizedBox(),
             content: SizedBox(
-              height: context.sized.dynamicHeight(0.5),
+              height: context.sized.dynamicHeight(0.8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -286,6 +292,11 @@ class _ConstructionViewState extends State<ConstructionView> {
                   finalShow("State: ", state.text),
                   finalShow("City: ", city.text),
                   finalShow("Address: ", address.text),
+                  finalShow("Is there a shop on the ground floor: ",
+                      isFloorShop == 0 ? "No" : "Yes"),
+                  finalShow(
+                      "Does your building has expanding floor after the first floor: ",
+                      isIncreasing == 0 ? "No" : "Yes"),
                   const Text(
                     "Your building schema photo: ",
                     style: TextStyle(
@@ -517,36 +528,47 @@ class _ConstructionViewState extends State<ConstructionView> {
                     y: first.coordinates.latitude.toString(),
                     imagePath: selectedImage!.path,
                     floor: int.parse(numberOfFloor.text),
-                    year: formatedDate.year);
-                await readAuthManager().addBuilding(
-                    BuildingModel(
-                        approved: false,
-                        yearOfBuilding: formatedDate.year,
-                        address: query,
-                        floorNumber: int.parse(numberOfFloor.text),
-                        position: [
-                          first.coordinates.latitude!,
-                          first.coordinates.longitude!
-                        ],
-                        buildingProjectImage: ""),
-                    readAuthManager().resultModel);
+                    year: formatedDate.year,
+                    isFloorShop: isFloorShop,
+                    isIncreasing: isIncreasing);
+                await readAuthManager().addBuilding(BuildingModel(
+                  resultModel: readAuthManager().resultModel,
+                  email: readAuthManager().email,
+                  name: buildingName.text,
+                  approved: false,
+                  yearOfBuilding: formatedDate.year,
+                  address: query,
+                  floorNumber: int.parse(numberOfFloor.text),
+                  position: [
+                    first.coordinates.latitude!,
+                    first.coordinates.longitude!
+                  ],
+                  buildingProjectImage: "",
+                  isFloorShop: isFloorShop,
+                  isIncreasing: isIncreasing,
+                ));
 
                 // Navigator.pop(context);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => ResultView(
-                            buildingModel: BuildingModel(
-                                approved: false,
-                                yearOfBuilding: formatedDate.year,
-                                address: query,
-                                floorNumber: int.parse(numberOfFloor.text),
-                                position: [
-                                  first.coordinates.latitude!,
-                                  first.coordinates.longitude!
-                                ],
-                                buildingProjectImage: ""),
-                            resultModel: readAuthManager().resultModel)));
+                              buildingModel: BuildingModel(
+                                  name: buildingName.text,
+                                  email: readAuthManager().email,
+                                  resultModel: readAuthManager().resultModel,
+                                  approved: false,
+                                  yearOfBuilding: formatedDate.year,
+                                  address: query,
+                                  floorNumber: int.parse(numberOfFloor.text),
+                                  position: [
+                                    first.coordinates.latitude!,
+                                    first.coordinates.longitude!
+                                  ],
+                                  isFloorShop: isFloorShop,
+                                  isIncreasing: isIncreasing,
+                                  buildingProjectImage: ""),
+                            )));
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
