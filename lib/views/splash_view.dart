@@ -18,6 +18,7 @@ class _SplashViewState extends State<SplashView> {
 
   Future<void> getData() async {
     await readAuthManager().fetchBuildings();
+    await Future.delayed(const Duration(seconds: 2));
     Navigator.pop(context);
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => MotionTabBarPage()));
@@ -34,6 +35,7 @@ class _SplashViewState extends State<SplashView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Lottie.asset('assets/lotties/loading_lottie.json'),
           const Text('Loading...')

@@ -126,17 +126,20 @@ class AuthenticationManager with ChangeNotifier {
   }
 
   List<BuildingModel>? buildings;
+  List<BuildingModel>? myBuildings;
 
   Future<void> fetchBuildings() async {
     List<BuildingModel> allData = [];
-    final foodsData = await fs.get().then((value) async {
+    final data = await fs.get().then((value) async {
       for (var doc in value.docs) {
         allData.add(BuildingModel.fromJson(doc.data() as Map<String, dynamic>));
       }
       return allData;
     });
-    if (foodsData != null) {
-      buildings = foodsData;
+    if (data != null) {
+      buildings = data;
+      myBuildings =
+          buildings!.where((element) => element.email == email).toList();
     } else {
       print("No data");
     }

@@ -115,7 +115,7 @@ class _MapViewState extends State<MapView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Map Sample"), actions: [
+      appBar: AppBar(title: const Text("Map View"), actions: [
         IconButton(
             onPressed: () async {
               if (buildingVisible) {
@@ -286,7 +286,10 @@ class _MapViewState extends State<MapView> {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: const Text('Filter'),
+                  child: const Text(
+                    'Filter',
+                    style: TextStyle(color: Colors.green),
+                  ),
                   onPressed: () {
                     assemblyMarkers = coordinateList
                         .where((e) =>

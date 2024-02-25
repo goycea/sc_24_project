@@ -10,18 +10,20 @@ class ProfileView extends StatefulWidget {
 class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child:Column(
-          children: [
-            //profile image
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage('assets/images/building.png'),
-            ),
-            //profile name
-            Text("John Doe"),
-          ],
+    return const SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: Column(
+            children: [
+              //profile image
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: AssetImage('assets/images/building.png'),
+              ),
+              //profile name
+              Text("John Doe"),
+            ],
+          ),
         ),
       ),
     );

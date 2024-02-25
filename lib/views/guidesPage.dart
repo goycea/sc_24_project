@@ -104,34 +104,37 @@ class _GuidesPageState extends State<GuidesPage> {
             return Skeletonizer(
               enabled: _loading,
               ignoreContainers: true,
-              child: ListTile(
-                  title: Text(guides[index].title,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w500)),
-                  subtitle: parse(guides[index].content)
-                              .documentElement!
-                              .text
-                              .length >
-                          100
-                      ? Text(
-                          '${parse(guides[index].content).documentElement!.text.substring(0, 100)}...')
-                      : Text(
-                          '${parse(guides[index].content).documentElement!.text}...'),
-                  trailing: guides[index].isSuggested != false
-                      ? Text('Suggested', style: TextStyle(color: Colors.green))
-                      : null,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => GuideView(
-                            title: guides[index].title,
-                            author: guides[index].author,
-                            publishDate: guides[index].publishDate,
-                            content: guides[index].content),
-                      ),
-                    );
-                  }),
+              child: Card(
+                child: ListTile(
+                    title: Text(guides[index].title,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500)),
+                    subtitle: parse(guides[index].content)
+                                .documentElement!
+                                .text
+                                .length >
+                            100
+                        ? Text(
+                            '${parse(guides[index].content).documentElement!.text.substring(0, 100)}...')
+                        : Text(
+                            '${parse(guides[index].content).documentElement!.text}...'),
+                    trailing: guides[index].isSuggested != false
+                        ? Text('Suggested',
+                            style: TextStyle(color: Colors.green))
+                        : null,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GuideView(
+                              title: guides[index].title,
+                              author: guides[index].author,
+                              publishDate: guides[index].publishDate,
+                              content: guides[index].content),
+                        ),
+                      );
+                    }),
+              ),
             );
           },
         ),
