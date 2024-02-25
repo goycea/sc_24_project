@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sc_24_project/views/home_view.dart';
 
 import '../managers/auth_manager.dart';
 
@@ -32,40 +30,7 @@ class _LoginPageState extends State<LoginPage> {
           );
         },
       );
-      try {
-        await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password);
-        await readAuthManager().fetchBuildings();
-        Navigator.pop(context);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const HomeView()));
-      } on FirebaseAuthException catch (e) {
-        print(e.code);
-        if (e.code == "user-not-found") {
-          print("User Not Found!");
-          //Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('User Not Found!'),
-          ));
-        } else if (e.code == "wrong-password") {
-          print("Wrong Password");
-          //Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Wrong Password!'),
-          ));
-        } else if (e.code == "invalid-credential") {
-          //Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('invalid-credential!'),
-          ));
-        } else {
-          String ecode = e.code;
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(ecode),
-          ));
-        }
-      }
-
+      await readAuthManager().login(email, password);
       Navigator.pop(context);
     }
 
@@ -186,8 +151,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   onTap: () {
                     signIn(
-                      emailController.text,
-                      passwordController.text,
+                      emailController.text.trim(),
+                      passwordController.text.trim(),
                     );
                   },
                 ),

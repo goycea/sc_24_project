@@ -19,6 +19,7 @@ class ResultModel {
     data['Total Value'] = totalValue;
     data['ground-type'] = groundType;
     data['index'] = index;
+
     return data;
   }
 }

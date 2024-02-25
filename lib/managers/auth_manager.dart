@@ -2,10 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sc_24_project/models/building_model.dart';
 import 'package:sc_24_project/models/result_model.dart';
+
+import '../views/home_view.dart';
 
 class AuthenticationManager with ChangeNotifier {
   BuildContext context;
@@ -19,6 +22,47 @@ class AuthenticationManager with ChangeNotifier {
     notifyListeners();
   }
 
+  String? email = "admin@gmail.com";
+
+  Future<void> login(String email, String password) async {
+    await _changeLoading();
+    this.email = email;
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      await fetchBuildings();
+      Navigator.pop(context);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const HomeView()));
+    } on FirebaseAuthException catch (e) {
+      print(e.code);
+      if (e.code == "user-not-found") {
+        print("User Not Found!");
+        //Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('User Not Found!'),
+        ));
+      } else if (e.code == "wrong-password") {
+        print("Wrong Password");
+        //Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Wrong Password!'),
+        ));
+      } else if (e.code == "invalid-credential") {
+        //Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('invalid-credential!'),
+        ));
+      } else {
+        String ecode = e.code;
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(ecode),
+        ));
+      }
+    }
+    await _changeLoading();
+  }
+
   ResultModel resultModel = ResultModel();
 
   Future calculate(
@@ -27,7 +71,7 @@ class AuthenticationManager with ChangeNotifier {
       required String imagePath,
       required int year,
       required int floor}) async {
-    _changeLoading();
+    await _changeLoading();
     var request = http.MultipartRequest(
         'POST', Uri.parse('https://cicikus.pythonanywhere.com/api/data-image'));
     request.fields.addAll({
@@ -41,18 +85,19 @@ class AuthenticationManager with ChangeNotifier {
     if (response.statusCode == 200) {
       resultModel = ResultModel.fromJson(
           jsonDecode(await response.stream.bytesToString()));
-      print(resultModel.groundType.toString() +
-          " " +
-          resultModel.totalValue.toString() +
-          " " +
-          resultModel.pGA.toString() +
-          " " +
-          resultModel.index.toString() +
-          " ");
     } else {
       print(response.reasonPhrase);
     }
-    _changeLoading();
+    await _changeLoading();
+  }
+
+  String getLastNumber(String str) {
+    for (int i = str.length - 1; i >= 0; i--) {
+      if (str[i].contains(RegExp(r'[0-9]'))) {
+        return str.substring(i);
+      }
+    }
+    return ''; // Return an empty string if no number is found
   }
 
   final CollectionReference fs =
@@ -70,12 +115,13 @@ class AuthenticationManager with ChangeNotifier {
       position: buildingModel.position,
       buildingProjectImage: "",
       resultModel: resultModel,
+      email: email,
     );
 
     await fs.doc(buildingModel.position.toString()).set(buildingModel.toJson());
   }
 
-  late List<BuildingModel> buildings;
+  List<BuildingModel>? buildings;
 
   Future<void> fetchBuildings() async {
     List<BuildingModel> allData = [];
@@ -85,8 +131,11 @@ class AuthenticationManager with ChangeNotifier {
       }
       return allData;
     });
-
-    buildings = foodsData;
+    if (foodsData != null) {
+      buildings = foodsData;
+    } else {
+      print("No data");
+    }
   }
 // final userCollection = FirebaseFirestore.instance.collection("users");
 

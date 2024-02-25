@@ -8,6 +8,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../managers/auth_manager.dart';
+import '../products/my_dropdown.dart';
 import '../utils/list_constants.dart';
 
 class MapView extends StatefulWidget {
@@ -26,15 +27,16 @@ class _MapViewState extends State<MapView> {
   AuthenticationManager watchAuthManager() =>
       context.watch<AuthenticationManager>();
 
+  String? selectedCountry;
+  String? selectedCity;
+  String? selectedProvince;
+  String? selectedNeighborhood;
+  LatLng? selectedCoordinates;
+
   BitmapDescriptor assemblyArea = BitmapDescriptor.defaultMarker;
   BitmapDescriptor building = BitmapDescriptor.defaultMarker;
   bool assemblyAreaVisible = true;
   bool buildingVisible = true;
-
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(39.924635, 32.862448),
-    zoom: 16.4746,
-  );
 
   var box = Hive.box('user');
 
@@ -51,6 +53,12 @@ class _MapViewState extends State<MapView> {
     box.get("buildingVisible") == null
         ? buildingVisible = true
         : buildingVisible = box.get("buildingVisible");
+
+    selectedCountry = box.get("country");
+    selectedCity = box.get("city");
+    selectedProvince = box.get("province");
+    selectedNeighborhood = box.get("neighborhood");
+
     _getAllMarkers();
   }
 
@@ -69,11 +77,16 @@ class _MapViewState extends State<MapView> {
         await getBytesFromAsset('assets/images/assembly.png', 150);
     assemblyArea = BitmapDescriptor.fromBytes(assemblyIcon);
     assemblyMarkers = coordinateList.map((e) {
-      return Marker(
-          icon: assemblyArea,
-          markerId: MarkerId("${e.name}"),
-          infoWindow: InfoWindow(title: "${e.name}"),
-          position: LatLng(e.coordinates.first, e.coordinates.last));
+      return e.country == selectedCountry &&
+              e.city == selectedCity &&
+              e.province == selectedProvince &&
+              e.neighborhood == selectedNeighborhood
+          ? Marker(
+              icon: assemblyArea,
+              markerId: MarkerId("${e.name}"),
+              infoWindow: InfoWindow(title: "${e.name}"),
+              position: LatLng(e.coordinates.first, e.coordinates.last))
+          : const Marker(markerId: MarkerId("0"));
     }).toSet();
   }
 
@@ -81,7 +94,7 @@ class _MapViewState extends State<MapView> {
     final Uint8List buildingIcon =
         await getBytesFromAsset('assets/images/building.png', 150);
     building = BitmapDescriptor.fromBytes(buildingIcon);
-    buildingMarkers = readAuthManager().buildings.map((e) {
+    buildingMarkers = readAuthManager().buildings!.map((e) {
       return Marker(
           icon: building,
           markerId: MarkerId("${e.yearOfBuilding}"),
@@ -129,18 +142,200 @@ class _MapViewState extends State<MapView> {
             icon: Icon(assemblyAreaVisible
                 ? Icons.people_alt
                 : Icons.person_add_alt_rounded)),
-        IconButton(onPressed: () {}, icon: Icon(Icons.filter_alt))
+        IconButton(
+            onPressed: () {
+              _showDialog(context);
+            },
+            icon: const Icon(Icons.filter_alt))
       ]),
       body: GoogleMap(
         myLocationButtonEnabled: true,
         indoorViewEnabled: true,
         mapType: MapType.normal,
         markers: markers,
-        initialCameraPosition: _kGooglePlex,
+        initialCameraPosition: CameraPosition(
+          target: selectedNeighborhood == null
+              ? const LatLng(41.0082, 28.9784)
+              : LatLng(
+                  coordinateList
+                      .where((e) =>
+                          e.country == selectedCountry &&
+                          e.city == selectedCity &&
+                          e.province == selectedProvince &&
+                          e.neighborhood == selectedNeighborhood)
+                      .first
+                      .coordinates
+                      .first,
+                  coordinateList
+                      .where((e) =>
+                          e.country == selectedCountry &&
+                          e.city == selectedCity &&
+                          e.province == selectedProvince &&
+                          e.neighborhood == selectedNeighborhood)
+                      .first
+                      .coordinates
+                      .last),
+          zoom: 16,
+        ),
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
       ),
+    );
+  }
+
+  _showDialog(BuildContext context) {
+    List<String> countries =
+        coordinateList.map((e) => e.country).toSet().toList();
+    selectedCountry =
+        box.get("country") == null ? countries.first : selectedCountry;
+
+    List<String> cities = coordinateList
+        .where((e) => e.country == selectedCountry)
+        .map((e) => e.city)
+        .toSet()
+        .toList();
+
+    selectedCity = box.get("city") == null ? cities.first : selectedCity;
+
+    List<String> provinces = coordinateList
+        .where((e) => e.city == selectedCity)
+        .map((e) => e.province)
+        .toSet()
+        .toList();
+    selectedProvince =
+        box.get("province") == null ? cities.first : selectedProvince;
+
+    List<String> neighborhoods = coordinateList
+        .where((e) => e.province == selectedProvince)
+        .map((e) => e.neighborhood)
+        .toSet()
+        .toList();
+
+    selectedNeighborhood =
+        box.get("neighborhood") == null ? cities.first : selectedNeighborhood;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  MyDropdown(
+                    hint: "Country",
+                    list: countries,
+                    value: selectedCountry!,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCountry = value;
+                        cities = coordinateList
+                            .where((e) => e.country == selectedCountry)
+                            .map((e) => e.city)
+                            .toSet()
+                            .toList();
+                        selectedCity = cities.first;
+                      });
+                    },
+                  ),
+                  MyDropdown(
+                    value: selectedCity!,
+                    hint: "City",
+                    list: cities,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCity = value;
+                        provinces = coordinateList
+                            .where((e) => e.city == selectedCity)
+                            .map((e) => e.province)
+                            .toSet()
+                            .toList();
+                        selectedProvince = provinces.first;
+                      });
+                    },
+                  ),
+                  MyDropdown(
+                    value: selectedProvince!,
+                    hint: "Province",
+                    list: provinces,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedProvince = value;
+                        neighborhoods = coordinateList
+                            .where((e) => e.province == selectedProvince)
+                            .map((e) => e.neighborhood)
+                            .toSet()
+                            .toList();
+                        selectedNeighborhood = neighborhoods.first;
+                      });
+                    },
+                  ),
+                  MyDropdown(
+                    value: selectedNeighborhood!,
+                    hint: "Neighborhood",
+                    list: neighborhoods,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedNeighborhood = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Filter'),
+                  onPressed: () {
+                    assemblyMarkers = coordinateList
+                        .where((e) =>
+                            e.country == selectedCountry &&
+                            e.city == selectedCity &&
+                            e.province == selectedProvince &&
+                            e.neighborhood == selectedNeighborhood)
+                        .map((e) {
+                      return Marker(
+                          icon: assemblyArea,
+                          markerId: MarkerId("${e.name}"),
+                          infoWindow: InfoWindow(title: "${e.name}"),
+                          position:
+                              LatLng(e.coordinates.first, e.coordinates.last));
+                    }).toSet();
+                    box.put("country", selectedCountry);
+                    box.put("city", selectedCity);
+                    box.put("province", selectedProvince);
+                    box.put("neighborhood", selectedNeighborhood);
+                    _getAllMarkers();
+                    _controller.future.then((value) {
+                      value.animateCamera(CameraUpdate.newLatLng(LatLng(
+                          coordinateList
+                              .where((e) =>
+                                  e.country == selectedCountry &&
+                                  e.city == selectedCity &&
+                                  e.province == selectedProvince &&
+                                  e.neighborhood == selectedNeighborhood)
+                              .first
+                              .coordinates
+                              .first,
+                          coordinateList
+                              .where((e) =>
+                                  e.country == selectedCountry &&
+                                  e.city == selectedCity &&
+                                  e.province == selectedProvince &&
+                                  e.neighborhood == selectedNeighborhood)
+                              .first
+                              .coordinates
+                              .last)));
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }

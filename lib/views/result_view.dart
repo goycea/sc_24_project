@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:kartal/kartal.dart';
 import 'package:provider/provider.dart';
 import 'package:sc_24_project/managers/auth_manager.dart';
 import 'package:sc_24_project/models/building_model.dart';
 import 'package:sc_24_project/models/result_model.dart';
 
+// ignore: must_be_immutable
 class ResultView extends StatefulWidget {
-  ResultView({super.key, required this.buildingModel});
+  ResultView(
+      {super.key, required this.buildingModel, required this.resultModel});
   BuildingModel buildingModel;
+  ResultModel resultModel;
 
   @override
   State<ResultView> createState() => _ResultViewState();
@@ -19,12 +23,21 @@ class _ResultViewState extends State<ResultView> {
   AuthenticationManager watchAuthManager() =>
       context.watch<AuthenticationManager>();
 
-  ResultModel resultModel = ResultModel();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    resultModel = readAuthManager().resultModel;
+  }
+
+  double? getLastNumber(String text) {
+    RegExp regExp =
+        RegExp(r'(\d+\.\d+)'); // Regular expression to match double values
+    Match? match = regExp.firstMatch(text);
+    if (match != null) {
+      return double.tryParse(
+          match.group(0) ?? ''); // Parsing matched value to double
+    }
+    return 0; // Return null if no double value is found
   }
 
   @override
@@ -44,12 +57,10 @@ class _ResultViewState extends State<ResultView> {
             ),
             const Text("Results", style: TextStyle(fontSize: 20)),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                buildColumn("PGA", resultModel.pGA.toString()),
-                buildColumn("Total Value", resultModel.totalValue.toString()),
-                buildColumn("Ground Type", resultModel.groundType.toString()),
-                buildColumn("Index", resultModel.index.toString()),
+                buildColumn("Total Value", widget.resultModel.totalValue!),
+                buildColumn("Index", getLastNumber(widget.resultModel.index!)!),
               ],
             ),
             const Text(
@@ -130,14 +141,22 @@ class _ResultViewState extends State<ResultView> {
     );
   }
 
-  Column buildColumn(String name, String value) {
+  Column buildColumn(String name, double value) {
     return Column(
       children: [
         Container(
-          width: 70,
-          height: 70,
-          color: Colors.green,
-          child: Center(child: Text(value.toString())),
+          decoration: BoxDecoration(
+            color: Colors.blue,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.black)),
+          width: context.sized.dynamicWidth(0.3),
+          height: context.sized.dynamicHeight(0.15),
+
+          child: Center(
+              child: Text(
+            NumberFormat('##0.0##', 'en_US').format(value),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          )),
         ),
         Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
       ],
