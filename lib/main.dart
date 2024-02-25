@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:sc_24_project/auth/authPage.dart';
 import 'package:sc_24_project/services/GuidesHiveService.dart';
 
+import 'core/network/no_network_widget.dart';
 import 'firebase_options.dart';
 import 'managers/auth_manager.dart';
 
@@ -44,8 +45,22 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
+      builder: (context, child) {
+        return Scaffold(
+          body: Column(
+            children: [
+              Expanded(
+                  child: child ??
+                      const SizedBox(
+                        height: 0,
+                      )),
+              const NoNetworkWidget()
+            ],
+          ),
+        );
+      },
       home: AuthPage(),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:kartal/kartal.dart';
 import 'package:provider/provider.dart';
 import 'package:sc_24_project/managers/auth_manager.dart';
@@ -56,12 +57,10 @@ class _ResultViewState extends State<ResultView> {
             ),
             const Text("Results", style: TextStyle(fontSize: 20)),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                buildColumn(
-                    "Total Value", widget.resultModel.totalValue.toString()),
-                buildColumn(
-                    "Index", "${getLastNumber(widget.resultModel.index!)}"),
+                buildColumn("Total Value", widget.resultModel.totalValue!),
+                buildColumn("Index", getLastNumber(widget.resultModel.index!)!),
               ],
             ),
             const Text(
@@ -142,14 +141,22 @@ class _ResultViewState extends State<ResultView> {
     );
   }
 
-  Column buildColumn(String name, String value) {
+  Column buildColumn(String name, double value) {
     return Column(
       children: [
         Container(
-          width: 70,
-          height: 70,
-          color: Colors.green,
-          child: Center(child: Text(value.toString())),
+          decoration: BoxDecoration(
+            color: Colors.blue,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.black)),
+          width: context.sized.dynamicWidth(0.3),
+          height: context.sized.dynamicHeight(0.15),
+
+          child: Center(
+              child: Text(
+            NumberFormat('##0.0##', 'en_US').format(value),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          )),
         ),
         Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
       ],

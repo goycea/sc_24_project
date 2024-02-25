@@ -44,6 +44,8 @@ class _ConstructionViewState extends State<ConstructionView> {
   TextEditingController state = TextEditingController();
   TextEditingController city = TextEditingController();
   TextEditingController address = TextEditingController();
+  int isFloorShop = 0;
+  int isIncreasing = 0;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
@@ -130,6 +132,36 @@ class _ConstructionViewState extends State<ConstructionView> {
                               ),
                             ],
                           )),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Text(
+                        "Is there a shop on the ground floor?",
+                        style: TextStyle(fontSize: textSizeNormal),
+                      ),
+                      Checkbox(
+                        value: isFloorShop == 0 ? false : true,
+                        onChanged: (value) {
+                          isFloorShop = value! ? 1 : 0;
+                          setState(() {});
+                        },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Text(
+                        "Is there a shop on the ground floor?",
+                        style: TextStyle(fontSize: textSizeNormal),
+                      ),
+                      Checkbox(
+                        value: isIncreasing == 0 ? false : true,
+                        onChanged: (value) {
+                          isFloorShop = value! ? 1 : 0;
+                          setState(() {});
+                        },
+                      ),
                     ],
                   ),
                 ],
