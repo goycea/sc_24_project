@@ -6,11 +6,14 @@ class MyDropdown extends StatefulWidget {
       {Key? key,
       required this.list,
       required this.onChanged,
-      required this.hint})
+      required this.hint,
+      required this.value})
       : super(key: key);
   List list;
   String hint;
+  String value;
   final void Function(String value) onChanged;
+
   @override
   State<MyDropdown> createState() => _MyDropdownState();
 }
@@ -24,7 +27,7 @@ class _MyDropdownState extends State<MyDropdown> {
 
   @override
   void initState() {
-    value = widget.list.first;
+    value = widget.value;
     super.initState();
   }
 
