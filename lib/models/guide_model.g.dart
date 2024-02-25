@@ -20,17 +20,15 @@ class GuideModelAdapter extends TypeAdapter<GuideModel> {
       title: fields[0] as String,
       content: fields[1] as String,
       author: fields[2] as String,
-      publishDate: fields[3] as String,
+      publishDate: fields[3] as DateTime,
       tags: (fields[4] as List).cast<String>(),
-    )
-      ..isSuggested = fields[5] as bool
-      ..isUpdated = fields[6] as bool;
+    )..isSuggested = fields[5] as bool;
   }
 
   @override
   void write(BinaryWriter writer, GuideModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -42,9 +40,7 @@ class GuideModelAdapter extends TypeAdapter<GuideModel> {
       ..writeByte(4)
       ..write(obj.tags)
       ..writeByte(5)
-      ..write(obj.isSuggested)
-      ..writeByte(6)
-      ..write(obj.isUpdated);
+      ..write(obj.isSuggested);
   }
 
   @override

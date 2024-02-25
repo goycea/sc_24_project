@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sc_24_project/auth/authPage.dart';
 import 'package:sc_24_project/services/GuidesHiveService.dart';
+import 'package:sc_24_project/theme/theme_provider.dart';
 
 import 'firebase_options.dart';
 import 'managers/auth_manager.dart';
@@ -23,6 +24,7 @@ Future<void> main() async {
       ChangeNotifierProvider<AuthenticationManager>(
         create: (context) => AuthenticationManager(context: context),
       ),
+      ChangeNotifierProvider(create: (context) => ThemeProvider()),
     ], child: const MyApp()),
   );
 }
@@ -44,7 +46,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return  MaterialApp(
+      theme: Provider.of<ThemeProvider>(context).themeData,
       debugShowCheckedModeBanner: false,
       home: AuthPage(),
     );

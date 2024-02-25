@@ -6,7 +6,7 @@ class Database{
   final box = Hive.box('guides');
 
   Future addGuide({required GuideModel model}) async {
-  await box.add(model);
+  await box.add(model);  
 }
 
 Future updateGuide({required GuideModel model, required int index}) async {
@@ -15,6 +15,11 @@ Future updateGuide({required GuideModel model, required int index}) async {
 
 Future deleteGuide({required int index}) async {
   await box.deleteAt(index);
+}
+
+
+Future deleteAllGuides() async {
+  await box.clear();
 }
 
 Future<List<GuideModel>> getGuides() async {
@@ -29,6 +34,21 @@ Future<List<GuideModel>> getGuides() async {
   return guides;
 }
 
+//Get last guide acording to most recent date
+Future<GuideModel?> getLastGuide() async {
+  final List<GuideModel> guides = await getOrderedGuides();
+  if (guides.isNotEmpty) {
+    return guides.last;
+  } else {
+    return null;
+  }
+}
 
+//Order all guides acording to date most recent must be lastest 
+Future<List<GuideModel>> getOrderedGuides() async {
+  final List<GuideModel> guides = await getGuides();
+  guides.sort((a, b) => a.publishDate.compareTo(b.publishDate));
+  return guides;
+}
 
 }

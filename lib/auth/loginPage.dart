@@ -90,6 +90,10 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+              "assets/images/logo.png",
+              width: 150,
+            ),
             const SizedBox(
               height: 20,
             ),
@@ -142,6 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                             focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: textColor))),
                         controller: passwordController,
+                        obscureText: true,
                       ),
                       const SizedBox(
                         height: 10,
@@ -260,11 +265,10 @@ class _LoginPageState extends State<LoginPage> {
                     Text("Not have a account? ",
                         style: TextStyle(
                             fontSize: 16, color: textColor.withOpacity(0.7))),
-                    Text("Register now.",
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: textColor.withOpacity(0.7),
-                            fontWeight: FontWeight.bold)),
+                    
+                            TextButton(onPressed: () {
+                              
+                            }, child: Text("Register now", style: TextStyle(color: Theme.of(context).colorScheme.secondary),),)
                   ],
                 ),
               ],

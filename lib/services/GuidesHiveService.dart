@@ -6,6 +6,7 @@ import 'package:sc_24_project/models/guide_model.dart';
 class GuidesHiveService {
  
  static Future<void> init()async{
+   
     await Hive.initFlutter();
     await adapterRegistration();
     await publicBoxes();
@@ -15,6 +16,8 @@ class GuidesHiveService {
    Hive.registerAdapter(GuideModelAdapter());
   }
  static Future <void> publicBoxes() async {
+   //Delete box
+    //await Hive.deleteBoxFromDisk('guides');
     await Hive.openBox('guides');
   }
 

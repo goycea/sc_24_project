@@ -10,7 +10,7 @@ class ResultModel {
     pGA = json['PGA'];
     totalValue = json['Total Value'];
     groundType = json['ground-type'];
-    index = json['index'];
+    //index = json['index'];
   }
 
   Map<String, dynamic> toJson() {

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kartal/kartal.dart';
+import 'package:sc_24_project/models/guide_model.dart';
+import 'package:sc_24_project/services/EnginCalculator.dart';
 import 'package:sc_24_project/utils/font_constants.dart';
 import 'package:sc_24_project/views/constructure_view.dart';
+import 'package:sc_24_project/views/profile_view.dart';
 
 import '../utils/color_constants.dart';
 
@@ -17,13 +20,25 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text("Home"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProfileView(),
+                    ));
+              },
+              icon: const Icon(Icons.person))
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+
             SizedBox(child: Image.asset("assets/images/safe_house.png")),
             const Align(
                 alignment: Alignment.centerLeft,
@@ -37,37 +52,41 @@ class _HomeViewState extends State<HomeView> {
               child: ListView.builder(
                 itemCount: 5,
                 itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            "76",
-                            style: TextStyle(
-                                color: riskTextColor,
-                                fontSize: textSizeTooBig,
-                                fontWeight: lang_font_weight),
-                          ),
-                          SizedBox(
-                            width: context.sized.dynamicWidth(0.6),
-                            child: const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Building Name",
-                                    style: TextStyle(
-                                        fontWeight: lang_font_weight,
-                                        fontSize: textSizeLargeMedium)),
-                                Text("lorem ipsum dolor sit amet,"
-                                    " consectetur adipiscing elit")
-                              ],
+                  return Container(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "76",
+                              style: TextStyle(
+                                  color: riskTextColor,
+                                  fontSize: textSizeTooBig,
+                                  fontWeight: lang_font_weight),
                             ),
-                          ),
-                          const Text("19.07.2023"),
-                        ],
-                      ),
-                      const Divider(),
-                    ],
+                            SizedBox(
+                              width: context.sized.dynamicWidth(0.6),
+                              child: const Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Building Name",
+                                      style: TextStyle(
+                                          fontWeight: lang_font_weight,
+                                          fontSize: textSizeLargeMedium)),
+                                  Text("lorem ipsum dolor sit amet,"),
+                                      const Text("19.07.2023"),
+                                      
+                                ],
+                              ),
+                            ),
+                            
+                          ],
+                        ),
+                        const Divider(),
+                      ],
+                    ),
                   );
                 },
               ),
