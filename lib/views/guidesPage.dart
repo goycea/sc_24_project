@@ -1,3 +1,5 @@
+// ignore_for_file: dead_code
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
@@ -84,11 +86,7 @@ class _GuidesPageState extends State<GuidesPage> {
       setState(() {
         _loading = false;
       });
-    } else {
-      setState(() {
-        _loading = false;
-      });
-    }
+    } else {}
   }
 
   @override

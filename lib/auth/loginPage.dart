@@ -247,26 +247,7 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Theme.of(context).colorScheme.secondary),
-                        child: Icon(
-                          Icons.facebook,
-                          size: 30,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Theme.of(context).colorScheme.secondary),
-                        child: Icon(
-                          Icons.g_translate,
-                          size: 30,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                        child: Image.asset("assets/images/google_icon.jpg"),
                       ),
                     ],
                   ),

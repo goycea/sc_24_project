@@ -38,7 +38,8 @@ class _SplashViewState extends State<SplashView> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Lottie.asset('assets/lotties/loading_lottie.json'),
-          const Text('Loading...')
+          const Text('Loading...',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         ],
       ),
     );

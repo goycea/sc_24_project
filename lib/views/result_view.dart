@@ -51,6 +51,29 @@ class _ResultViewState extends State<ResultView> {
     }
   }
 
+  MaterialColor getColor2(double value) {
+    if (value >= 0.75) {
+      return Colors.green;
+    } else if (value >= 0.5 && value <= 0.74) {
+      return (Colors.yellow);
+    } else if (value >= 0 && value <= 49) {
+      return (Colors.red);
+    }
+    return (Colors.red);
+  }
+
+  String getStringValue(double value) {
+    if (value >= 0.75) {
+      return "Good";
+    } else if (value >= 0.5 && value <= 0.74) {
+      return "Medium";
+    } else if (value >= 0 && value <= 49) {
+      return "Bad";
+    } else {
+      return "Error";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +95,7 @@ class _ResultViewState extends State<ResultView> {
               children: [
                 buildColumn("Total Value",
                     widget.buildingModel.resultModel!.totalValue!),
-                buildColumn("Index",
+                buildColumn2("Index",
                     getLastNumber(widget.buildingModel.resultModel!.index!)!),
               ],
             ),
@@ -142,7 +165,8 @@ class _ResultViewState extends State<ResultView> {
                     " " +
                     widget.buildingModel.position!.last.toString()),
             const Text(
-              "This report and result are not accurate, please consult with a professional engineer.",
+              "This report and result may not fully accurate, please consult with a professional engineer.",
+              textAlign: TextAlign.center,
               style: TextStyle(
                   fontWeight: FontWeight.bold, color: Colors.red, fontSize: 20),
             ),
@@ -192,6 +216,27 @@ class _ResultViewState extends State<ResultView> {
           child: Center(
               child: Text(
             NumberFormat('##0.0##', 'en_US').format(value),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          )),
+        ),
+        Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+      ],
+    );
+  }
+
+  Column buildColumn2(String name, double value) {
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+              color: getColor2(value),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.black)),
+          width: context.sized.dynamicWidth(0.3),
+          height: context.sized.dynamicHeight(0.15),
+          child: Center(
+              child: Text(
+            getStringValue(value),
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           )),
         ),

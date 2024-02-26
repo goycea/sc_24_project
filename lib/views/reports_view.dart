@@ -24,7 +24,7 @@ class _ReportsViewState extends State<ReportsView> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    myBuildings = readAuthManager().buildings!;
+    myBuildings = readAuthManager().myBuildings!;
   }
 
   @override

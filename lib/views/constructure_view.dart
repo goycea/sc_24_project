@@ -74,104 +74,104 @@ class _ConstructionViewState extends State<ConstructionView> {
               _activeStepIndex <= 0 ? StepState.disabled : StepState.complete,
           isActive: _activeStepIndex >= 0,
           title: const SizedBox(),
-          content: SizedBox(
-            height: context.sized.dynamicHeight(0.5),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const Text(
+          content: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FittedBox(
+                  child: const Text(
                     "Building Information",
                     style: TextStyle(
                         fontSize: textSizeXXXLarge,
                         fontWeight: FontWeight.bold),
                   ),
-                  const Text("Fill in the data for building profile. "
-                      "It will take a couple of minutes. "
-                      "You only need a basic information and plan of the building"),
-                  myTextField(buildingName, 'Building Name', 'Enter a name', "",
-                      TextInputType.text, []),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
+                ),
+                const Text("Fill in the data for building profile. "
+                    "It will take a couple of minutes. "
+                    "You only need a basic information and plan of the building"),
+                SizedBox(height: context.sized.dynamicHeight(0.02)),
+                myTextField(buildingName, 'Building Name', 'Enter a name', "",
+                    TextInputType.text, []),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      width: context.sized.dynamicWidth(0.4),
+                      child: myTextField(
+                          numberOfFloor,
+                          'Number of Floor',
+                          'Enter the number of floor',
+                          "",
+                          TextInputType.number, []),
+                    ),
+                    SizedBox(
                         width: context.sized.dynamicWidth(0.4),
-                        child: myTextField(
-                            numberOfFloor,
-                            'Number of Floor',
-                            'Enter the number of floor',
-                            "",
-                            TextInputType.number, []),
+                        child: Column(
+                          children: [
+                            const Text("Year of Building: ",
+                                style: TextStyle(fontSize: textSizeMedium)),
+                            TextButton(
+                              child: Text(
+                                  "${DateFormat("yyyy").format(formatedDate)} ",
+                                  style: const TextStyle(
+                                      fontSize: textSizeMedium)),
+                              onPressed: () async {
+                                await DatePicker.showSimpleDatePicker(
+                                  context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(1000),
+                                  lastDate: DateTime.now(),
+                                  dateFormat: "yyyy",
+                                  locale: DateTimePickerLocale.tr,
+                                  looping: false,
+                                ).then((value) {
+                                  formatedDate = value!;
+                                  setState(() {});
+                                });
+                              },
+                            ),
+                          ],
+                        )),
+                  ],
+                ),
+                FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Row(
+                    children: [
+                      const Text(
+                        "Is there a shop on the ground floor?",
+                        style: TextStyle(fontSize: 20),
                       ),
-                      SizedBox(
-                          width: context.sized.dynamicWidth(0.4),
-                          child: Column(
-                            children: [
-                              const Text("Year of Building: ",
-                                  style: TextStyle(fontSize: textSizeMedium)),
-                              TextButton(
-                                child: Text(
-                                    "${DateFormat("yyyy").format(formatedDate)} ",
-                                    style: const TextStyle(
-                                        fontSize: textSizeMedium)),
-                                onPressed: () async {
-                                  await DatePicker.showSimpleDatePicker(
-                                    context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(1000),
-                                    lastDate: DateTime.now(),
-                                    dateFormat: "yyyy",
-                                    locale: DateTimePickerLocale.tr,
-                                    looping: false,
-                                  ).then((value) {
-                                    formatedDate = value!;
-                                    setState(() {});
-                                  });
-                                },
-                              ),
-                            ],
-                          )),
+                      Checkbox(
+                        value: isFloorShop == 0 ? false : true,
+                        onChanged: (value) {
+                          isFloorShop = value! ? 1 : 0;
+                          setState(() {});
+                        },
+                      ),
                     ],
                   ),
-                  FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Row(
-                      children: [
-                        const Text(
-                          "Is there a shop on the ground floor?",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        Checkbox(
-                          value: isFloorShop == 0 ? false : true,
-                          onChanged: (value) {
-                            isFloorShop = value! ? 1 : 0;
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
+                ),
+                FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Row(
+                    children: [
+                      const Text(
+                        "Does your building has expanding floor after the first floor?",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Checkbox(
+                        value: isIncreasing == 0 ? false : true,
+                        onChanged: (value) {
+                          isIncreasing = value! ? 1 : 0;
+                          setState(() {});
+                        },
+                      ),
+                    ],
                   ),
-                  FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Row(
-                      children: [
-                        const Text(
-                          "Does your building has expanding floor after the first floor?",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        Checkbox(
-                          value: isIncreasing == 0 ? false : true,
-                          onChanged: (value) {
-                            isIncreasing = value! ? 1 : 0;
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -228,51 +228,51 @@ class _ConstructionViewState extends State<ConstructionView> {
             state: StepState.complete,
             isActive: _activeStepIndex >= 2,
             title: const SizedBox(),
-            content: SizedBox(
-              height: context.sized.dynamicHeight(0.5),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const Text(
-                    "Choose Building Schema Photo",
-                    style: TextStyle(
-                        fontSize: textSizeLarge, fontWeight: FontWeight.bold),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const Text(
+                  "Choose Building Schema Photo",
+                  style: TextStyle(
+                      fontSize: textSizeLarge, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: context.sized.dynamicHeight(0.02)),
+                const Text("We need a building diagram for "
+                    "the estimated damage your building will suffer in a possible earthquake."),
+                SizedBox(height: context.sized.dynamicHeight(0.02)),
+                Container(
+                  height: 200,
+                  width: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    image: selectedImage != null
+                        ? DecorationImage(
+                            image: FileImage(selectedImage!), fit: BoxFit.cover)
+                        : null,
                   ),
-                  const Text("We need a building diagram for "
-                      "the estimated damage your building will suffer in a possible earthquake."),
-                  Container(
-                    height: 200,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      image: selectedImage != null
-                          ? DecorationImage(
-                              image: FileImage(selectedImage!),
-                              fit: BoxFit.cover)
-                          : null,
+                ),
+                SizedBox(height: context.sized.dynamicHeight(0.04)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {
+                          _pickImageFromGallery()
+                              .then((value) => print('Image Picked'));
+                        },
+                        child: const Text('Gallery')),
+                    const SizedBox(
+                      width: 20,
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                          onPressed: () {
-                            _pickImageFromGallery()
-                                .then((value) => print('Image Picked'));
-                          },
-                          child: const Text('Gallery')),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      ElevatedButton(
-                          onPressed: () {
-                            _pickImageFromCamera();
-                          },
-                          child: const Text('Camera')),
-                    ],
-                  ),
-                ],
-              ),
+                    ElevatedButton(
+                        onPressed: () {
+                          _pickImageFromCamera();
+                        },
+                        child: const Text('Camera')),
+                  ],
+                ),
+                SizedBox(height: context.sized.dynamicHeight(0.08)),
+              ],
             )),
         Step(
             state: StepState.complete,
@@ -425,7 +425,7 @@ class _ConstructionViewState extends State<ConstructionView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter Stepper'),
+        title: const Text('Add Building'),
       ),
       body: Stepper(
         type: StepperType.horizontal,
