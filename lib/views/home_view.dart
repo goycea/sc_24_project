@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kartal/kartal.dart';
-import 'package:sc_24_project/models/guide_model.dart';
-import 'package:sc_24_project/services/EnginCalculator.dart';
 import 'package:sc_24_project/utils/font_constants.dart';
 import 'package:sc_24_project/views/constructure_view.dart';
 import 'package:sc_24_project/views/profile_view.dart';
@@ -38,7 +36,7 @@ class _HomeViewState extends State<HomeView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-
+           
             SizedBox(child: Image.asset("assets/images/safe_house.png")),
             const Align(
                 alignment: Alignment.centerLeft,
