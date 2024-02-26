@@ -67,6 +67,7 @@ class _MotionTabBarPageState extends State<MotionTabBarPage>
     return WillPopScope(
         onWillPop: _requestPop,
         child: Scaffold(
+          backgroundColor: const Color(0xffe0e0e0),
           body: TabBarView(
             controller: _controller,
             physics: const NeverScrollableScrollPhysics(),
@@ -87,14 +88,17 @@ class _MotionTabBarPageState extends State<MotionTabBarPage>
             ],
             initialSelectedTab: 'Home',
             tabIconColor: Colors.black,
-            tabSelectedColor: Colors.black54,
+            tabSelectedColor: Color(0xFF087290),
             icons: const [
               Icons.home_outlined,
               CupertinoIcons.map_fill,
               Icons.event_note_outlined,
               Icons.book_sharp,
             ],
-            textStyle: const TextStyle(color: Colors.black),
+            textStyle: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 18.0),
             onTabItemSelected: (int value) {
               setState(() {
                 _controller!.index = value;

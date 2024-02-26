@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -7,8 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sc_24_project/models/building_model.dart';
 import 'package:sc_24_project/models/result_model.dart';
-
-import '../views/home_view.dart';
+import 'package:sc_24_project/views/splash_view.dart';
 
 class AuthenticationManager with ChangeNotifier {
   BuildContext context;
@@ -24,7 +25,8 @@ class AuthenticationManager with ChangeNotifier {
 
   String? email = "admin@gmail.com";
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(
+      String email, String password, BuildContext context) async {
     await _changeLoading();
     this.email = email;
     try {
@@ -32,8 +34,8 @@ class AuthenticationManager with ChangeNotifier {
           .signInWithEmailAndPassword(email: email, password: password);
       await fetchBuildings();
       Navigator.pop(context);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomeView()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const SplashView()));
     } on FirebaseAuthException catch (e) {
       print(e.code);
       if (e.code == "user-not-found") {
@@ -70,13 +72,16 @@ class AuthenticationManager with ChangeNotifier {
       required String y,
       required String imagePath,
       required int year,
-      required int floor}) async {
+      required int floor,
+      required int isIncreasing,
+      required int isFloorShop}) async {
     await _changeLoading();
     var request = http.MultipartRequest(
         'POST', Uri.parse('https://cicikus.pythonanywhere.com/api/data-image'));
     request.fields.addAll({
       'data':
-          '{"x":$x,"y":$y,"year":${year.toString()}, "floor":${floor.toString()}}'
+          '{"x":$x,"y":$y,"year":${year.toString()}, "floor":${floor.toString()}, '
+              '"isIncreasing":$isIncreasing, "isFloorShop":$isFloorShop}'
     });
     request.files.add(await http.MultipartFile.fromPath('image', imagePath));
 
@@ -104,8 +109,7 @@ class AuthenticationManager with ChangeNotifier {
       FirebaseFirestore.instance.collection('buildings');
 
   BuildingModel? buildingModel;
-  Future<void> addBuilding(
-      BuildingModel buildingModel, ResultModel resultModel) async {
+  Future<void> addBuilding(BuildingModel buildingModel) async {
     buildingModel = BuildingModel(
       name: buildingModel.name,
       approved: false,
@@ -114,25 +118,30 @@ class AuthenticationManager with ChangeNotifier {
       floorNumber: buildingModel.floorNumber,
       position: buildingModel.position,
       buildingProjectImage: "",
-      resultModel: resultModel,
+      resultModel: buildingModel.resultModel,
       email: email,
+      isFloorShop: buildingModel.isFloorShop,
+      isIncreasing: buildingModel.isIncreasing,
     );
 
     await fs.doc(buildingModel.position.toString()).set(buildingModel.toJson());
   }
 
   List<BuildingModel>? buildings;
+  List<BuildingModel>? myBuildings;
 
   Future<void> fetchBuildings() async {
     List<BuildingModel> allData = [];
-    final foodsData = await fs.get().then((value) async {
+    final data = await fs.get().then((value) async {
       for (var doc in value.docs) {
         allData.add(BuildingModel.fromJson(doc.data() as Map<String, dynamic>));
       }
       return allData;
     });
-    if (foodsData != null) {
-      buildings = foodsData;
+    if (data != null) {
+      buildings = data;
+      myBuildings =
+          buildings!.where((element) => element.email == email).toList();
     } else {
       print("No data");
     }

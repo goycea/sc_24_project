@@ -24,7 +24,7 @@ class _ReportsViewState extends State<ReportsView> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    myBuildings = readAuthManager().buildings!;
+    myBuildings = readAuthManager().myBuildings!;
   }
 
   @override
@@ -45,8 +45,8 @@ class _ReportsViewState extends State<ReportsView> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ResultView(
-                          buildingModel: myBuildings[index],
-                          resultModel: myBuildings[index].resultModel!),
+                        buildingModel: myBuildings[index],
+                      ),
                     ),
                   );
                 },

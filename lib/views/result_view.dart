@@ -4,14 +4,11 @@ import 'package:kartal/kartal.dart';
 import 'package:provider/provider.dart';
 import 'package:sc_24_project/managers/auth_manager.dart';
 import 'package:sc_24_project/models/building_model.dart';
-import 'package:sc_24_project/models/result_model.dart';
 
 // ignore: must_be_immutable
 class ResultView extends StatefulWidget {
-  ResultView(
-      {super.key, required this.buildingModel, required this.resultModel});
+  ResultView({super.key, required this.buildingModel});
   BuildingModel buildingModel;
-  ResultModel resultModel;
 
   @override
   State<ResultView> createState() => _ResultViewState();
@@ -40,6 +37,43 @@ class _ResultViewState extends State<ResultView> {
     return 0; // Return null if no double value is found
   }
 
+  MaterialColor getColor(double value) {
+    if (value >= 80) {
+      return Colors.blue;
+    } else if (value >= 60 && value <= 79) {
+      return (Colors.green);
+    } else if (value >= 40 && value <= 59) {
+      return (Colors.yellow);
+    } else if (value >= 20 && value <= 39) {
+      return (Colors.orange);
+    } else {
+      return (Colors.red);
+    }
+  }
+
+  MaterialColor getColor2(double value) {
+    if (value >= 0.75) {
+      return Colors.green;
+    } else if (value >= 0.5 && value <= 0.74) {
+      return (Colors.yellow);
+    } else if (value >= 0 && value <= 49) {
+      return (Colors.red);
+    }
+    return (Colors.red);
+  }
+
+  String getStringValue(double value) {
+    if (value >= 0.75) {
+      return "Good";
+    } else if (value >= 0.5 && value <= 0.74) {
+      return "Medium";
+    } else if (value >= 0 && value <= 49) {
+      return "Bad";
+    } else {
+      return "Error";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,48 +93,70 @@ class _ResultViewState extends State<ResultView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                buildColumn("Total Value", widget.resultModel.totalValue!),
-                buildColumn("Index", getLastNumber(widget.resultModel.index!)!),
+                buildColumn("Total Value",
+                    widget.buildingModel.resultModel!.totalValue!),
+                buildColumn2("Index",
+                    getLastNumber(widget.buildingModel.resultModel!.index!)!),
               ],
             ),
             const Text(
-              "This report and result are not accurate, please consult with a professional engineer.",
-              style: TextStyle(fontWeight: FontWeight.bold),
+                "Total Value is the value of the building's seismic performance. "
+                "The higher the value, the better the building's seismic performance. ",
+                style: TextStyle(
+                  color: Colors.blueGrey,
+                )),
+            const Text(
+              "The Hassan index is a method for assessing the vulnerability "
+              "of low-rise reinforced concrete buildings to earthquakes. "
+              "It's a simple and widely used tool "
+              "for screening large numbers of buildings in areas prone to earthquakes.",
+              style: TextStyle(color: Colors.blueGrey),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                    color: Colors.blue,
-                    child: const Text("Very Good 3+",
-                        style: TextStyle(fontWeight: FontWeight.bold))),
-                Container(
-                  color: Colors.green,
-                  child: const Text("Good 2.5-3",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                ),
-                Container(
-                  color: Colors.yellow,
-                  child: const Text("Moderate 1.5-2.5",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                ),
-                Container(
-                  color: Colors.orange,
-                  child: const Text("Poor 1-1.5",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                ),
-                Container(
-                  color: Colors.red,
-                  child: const Text("Very Poor 0-1",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                ),
-              ],
+            FittedBox(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                      padding: const EdgeInsets.all(2),
+                      color: Colors.blue,
+                      child: const Text("Very Good 80+",
+                          style: TextStyle(fontWeight: FontWeight.bold))),
+                  Container(
+                    padding: const EdgeInsets.all(2),
+                    color: Colors.green,
+                    child: const Text("Good 60-79",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(2),
+                    color: Colors.yellow,
+                    child: const Text("Moderate 40-59",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(2),
+                    color: Colors.orange,
+                    child: const Text("Poor 20-39",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(2),
+                    color: Colors.red,
+                    child: const Text("Very Poor 0-19",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
             ),
             buildCard("Address", widget.buildingModel.address!),
             buildCard("Year of Building",
                 widget.buildingModel.yearOfBuilding.toString()),
             buildCard(
                 "Floor Number", widget.buildingModel.floorNumber.toString()),
+            buildCard("Has shop under the building?",
+                widget.buildingModel.isFloorShop == 1 ? "Yes" : "No"),
+            buildCard("From the 1st floor, does the floor area increase?",
+                widget.buildingModel.isIncreasing == 1 ? "Yes" : "No"),
             buildCard("Approved",
                 widget.buildingModel.approved.toString().toUpperCase()),
             buildCard(
@@ -108,6 +164,12 @@ class _ResultViewState extends State<ResultView> {
                 widget.buildingModel.position!.first.toString() +
                     " " +
                     widget.buildingModel.position!.last.toString()),
+            const Text(
+              "This report and result may not fully accurate, please consult with a professional engineer.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.red, fontSize: 20),
+            ),
           ],
         ),
       ),
@@ -146,16 +208,36 @@ class _ResultViewState extends State<ResultView> {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.blue,
+              color: getColor(value),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: Colors.black)),
           width: context.sized.dynamicWidth(0.3),
           height: context.sized.dynamicHeight(0.15),
-
           child: Center(
               child: Text(
             NumberFormat('##0.0##', 'en_US').format(value),
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          )),
+        ),
+        Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+      ],
+    );
+  }
+
+  Column buildColumn2(String name, double value) {
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+              color: getColor2(value),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.black)),
+          width: context.sized.dynamicWidth(0.3),
+          height: context.sized.dynamicHeight(0.15),
+          child: Center(
+              child: Text(
+            getStringValue(value),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           )),
         ),
         Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
