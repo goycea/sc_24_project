@@ -1,16 +1,23 @@
-# sc_24_project
+# Güvenli Yuvam
 
-A new Flutter project.
+Güvenli Yuvam is a mobile application developed for the Google Solution Challenge, aimed at providing users with tools to assess earthquake risks for their buildings, access safety guides, and stay informed about earthquake-related news. The project utilizes Gemini AI and is built using Flutter.
 
-## Getting Started
+# Features
 
-This project is a starting point for a Flutter application.
+**Building Risk Analysis**: Users can add their buildings and perform risk analysis for potential earthquakes based on factors such as the number of floors, location, and ground structure.
 
-A few resources to get you started if this is your first Flutter project:
+**AI-Powered Risk Analysis**: Gemini AI analyzes uploaded construction plans/photos of buildings, providing users with additional risk analysis based on visual data.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+**Database Integration** : Analyzed building data is added to the database, enabling users to access and view the analysis of various buildings.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**Meeting Areas Locator**: Users can locate nearby meeting areas designated for emergencies during earthquakes.
+
+**Earthquake Guides and News**: Access to earthquake-related guides and news from within the application.
+
+**Usage**
+https://youtu.be/z2YQpR6XYbo?si=ktKU23DEXzrTfCWQ
+
+## Contributors
++Ahmet Engin Büyükdığan
++Aybüke Yaman
++Ali Bolat
