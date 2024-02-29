@@ -1,4 +1,7 @@
-# Güvenli Yuvam
+
+![WhatsApp Görsel 2024-02-26 saat 06 40 29_f0a77e03](https://github.com/goycea/sc_24_project/assets/100462166/c7d8591d-499d-4c9e-ad8c-25eeeabc7b6a)
+
+# About
 
 Güvenli Yuvam is a mobile application developed for the Google Solution Challenge, aimed at providing users with tools to assess earthquake risks for their buildings, access safety guides, and stay informed about earthquake-related news. The project utilizes Gemini AI and is built using Flutter.
 
@@ -14,10 +17,41 @@ Güvenli Yuvam is a mobile application developed for the Google Solution Challen
 
 **Earthquake Guides and News**: Access to earthquake-related guides and news from within the application.
 
-**Usage**
-https://youtu.be/z2YQpR6XYbo?si=ktKU23DEXzrTfCWQ
+# Technologies
+  + Flutter/Dart
+    +  Provider
+    +  Hive
+    +  Geocoder
+    +  Lottie
+    +  Connectivity
+    +  Camera
+  + Gemini AI
+  + Google Maps API
+  + Firebase
+  + Python
+    +  Numpy
+    +  PIL
+    +  google-generativeai
+    +  python-dotenv  
 
-## Contributors
-+Ahmet Engin Büyükdığan
-+Aybüke Yaman
-+Ali Bolat
+# Usage
+
+https://github.com/goycea/sc_24_project/assets/100462166/2195104c-ecc0-46bd-82c0-9ef4bb4ac010
+
+
+
+# Future Plans
+  + Adding current location of user
+  + Changing the ai model with own ai model which calculates wall and column indexes
+  
+# Contributors
+  +  [Ali Bolat](https://github.com/Hajorda)
+  +  [Ahmet Engin Büyüdığan](https://github.com/Cicikuss)
+  +  [Aybüke Yaman](https://github.com/AybukeYaman)
+
+# References
+  + [Vs30 Map](https://zenodo.org/records/10149864)
+  + [Okay Özacar Vs30 Predictions on Map](https://drive.google.com/file/d/1ApbZF0badxg9TrF4v_3zyMA9BCyHarNS/view)
+  + [Earthquake Map and Fault line](https://www.afad.gov.tr/kurumlar/afad.gov.tr/39499/xfiles/deprem_haritasi.pdf)
+  + [Hassan Index](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+
