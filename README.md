@@ -53,5 +53,5 @@ https://github.com/goycea/sc_24_project/assets/100462166/2195104c-ecc0-46bd-82c0
   + [Vs30 Map](https://zenodo.org/records/10149864)
   + [Okay Özacar Vs30 Predictions on Map](https://drive.google.com/file/d/1ApbZF0badxg9TrF4v_3zyMA9BCyHarNS/view)
   + [Earthquake Map and Fault line](https://www.afad.gov.tr/kurumlar/afad.gov.tr/39499/xfiles/deprem_haritasi.pdf)
-  + [Hassan Index](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+  + [Hassan Index](https://github.com/goycea/sc_24_project/files/14453371/Hassan_Index_94-S04.pdf) 
 
